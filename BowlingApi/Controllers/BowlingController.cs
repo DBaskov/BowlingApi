@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BowlingApi.BusinessLogicHelpers;
 using BowlingApi.DTOs;
-using BowlingApi.PlayersHelper;
 using BowlingApi.Services;
 using BowlingApi.Services.Models;
 using Microsoft.AspNetCore.Http;

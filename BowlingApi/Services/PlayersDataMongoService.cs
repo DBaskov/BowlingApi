@@ -18,6 +18,20 @@ namespace BowlingApi.Services
             _mongoDbContext = mongoDbContext;
         }
 
+        public async Task<bool> AddPlayer(PlayerGameData player)
+        {
+            try
+            {
+                await _mongoDbContext.PlayersMongoCollection.InsertOneAsync(player);
+                return true;
+            }
+            catch (Exception)
+            {
+                //log exception here
+                return false;
+            }
+        }
+
         //think if you want to return whole playerGameData object
         public async Task<bool> AddPlayers(List<PlayerGameData> players)
         {
@@ -52,7 +66,7 @@ namespace BowlingApi.Services
             return result.IsAcknowledged && result.DeletedCount > 0;
         }
 
-        public async Task<PlayerGameData> UpdatePlayerData(PlayerGameData updatedGameData)
+        public async Task<bool> UpdatePlayerData(PlayerGameData updatedGameData)
         {
             throw new NotImplementedException();
         }

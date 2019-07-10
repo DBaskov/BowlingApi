@@ -6,6 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Helpers\**" />
+    <Compile Remove="PlayersHelper\**" />
+    <Content Remove="Helpers\**" />
+    <Content Remove="PlayersHelper\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="PlayersHelper\**" />
+    <None Remove="Helpers\**" />
+    <None Remove="PlayersHelper\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />

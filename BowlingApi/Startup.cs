@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BowlingApi.BusinessLogicHelpers;
 using BowlingApi.DBContexts;
 using BowlingApi.DBContexts.Models;
 using BowlingApi.Services;
@@ -33,6 +34,7 @@ namespace BowlingApi
             services.AddSingleton<IPlayersMongoDbSetings>(s => s.GetRequiredService<IOptions<PlayersMongoDbSetings>>().Value);
             services.TryAddSingleton<IMongoDBContext, MongoDBContext>();
             services.TryAddSingleton<IPlayersDataService, PlayersDataMongoService>();
+            services.TryAddSingleton<IPlayersHelper, PlayersHelper>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

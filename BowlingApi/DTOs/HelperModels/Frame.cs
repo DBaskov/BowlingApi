@@ -7,6 +7,6 @@ namespace BowlingApi.DTOs.HelperModels
 {
     public class Frame
     {
-        public Tuple<int, int> Scores { get; set; }
+        public Tuple<int, int> Scores { get; set; } = new Tuple<int, int>(0, 0);
     }
 }

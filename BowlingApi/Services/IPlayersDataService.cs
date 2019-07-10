@@ -10,11 +10,13 @@ namespace BowlingApi.Services
     {
         Task<bool> AddPlayers(List<PlayerGameData> players);
 
+        Task<bool> AddPlayer(PlayerGameData player);
+
         Task<bool> DeletePlayers(List<string> playerIds);
 
         Task<bool> DeletePlayer(string playerId);
 
-        Task<PlayerGameData> UpdatePlayerData(PlayerGameData updatedGameData);
+        Task<bool> UpdatePlayerData(PlayerGameData updatedGameData);
 
         Task<PlayerGameData> GetPlayerData(string playerId);
     }

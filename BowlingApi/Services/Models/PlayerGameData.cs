@@ -12,14 +12,14 @@ namespace BowlingApi.Services.Models
 
         public string MatchId { get; set; }
 
-        public string PlayerName { get; set; }
+        public string PlayerName { get; set; } = "";
 
-        public int TotalScore { get; set; }
+        public int TotalScore { get; set; } = 0;
 
-        public List<int> RunningTotalList { get; set; }
+        public List<int> RunningTotalList { get; set; } = new List<int>();
 
-        public List<int> ResultList { get; set; }
+        public List<int> ResultList { get; set; } = new List<int>();
 
-        public FrameScores FrameScores { get; set; }
+        public FrameScores FrameScores { get; set; } = new FrameScores();
     }
 }
