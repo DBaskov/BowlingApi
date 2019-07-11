@@ -12,7 +12,7 @@ namespace BowlingApi.BusinessLogicHelpers
 
         Task<PlayerGameData> InstiateAndInsertPlayerGameData(string playerName);
 
-        Task<List<PlayerGameData>> UpdateScore(int numPins);
+        Task<PlayerGameData> UpdateScore(Guid playerId, int numPins);
 
         Task<List<PlayerGameData>> ChangeFrameScore(string playerId, int frameNumber, int newScore);
         

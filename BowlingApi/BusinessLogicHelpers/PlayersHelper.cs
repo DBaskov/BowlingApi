@@ -77,9 +77,66 @@ namespace BowlingApi.BusinessLogicHelpers
             return playersList;
         }        
 
-        public async Task<PlayerGameData> UpdateScore(int numPins)
+        public async Task<PlayerGameData> UpdateScore(Guid playerId, int numPins)
         {
-            throw new NotImplementedException();
+            var score = await _playersDataService.GetPlayerData(playerId.ToString());
+
+            score.TotalScore += numPins;
+
+            var frame = new List<int>();
+            //var curFrameIdx = 0;
+           // var curCellIdx = 0;
+
+            var frameNum = score.ResultList.Count;
+            if (frameNum > 0) //optimize this later
+            {
+                frame = score.ResultList[score.ResultList.Count - 1];
+
+                if (frame.Count == 1) //also logic for 10
+                {
+                    score.RunningTotalList[score.ResultList.Count - 1] = score.TotalScore;                    
+                    frame.Add(numPins);
+                }
+                else
+                {
+                    score.RunningTotalList.Add(score.TotalScore);
+                    score.ResultList.Add(new List<int>() { numPins });
+                }
+
+                if(frameNum)
+            }
+            else
+            {
+                score.RunningTotalList.Add(score.TotalScore);
+                score.ResultList.Add(new List<int>() { numPins });
+            }
+            
+            /*
+            if (prevFrameIdx < 10) //check this logic
+            {
+                if(prevCellIdx == 0)
+                {
+                    score.RunningTotalList[prevFrameIdx] = score.TotalScore;
+                    score.ResultList[prevFrameIdx][prevCellIdx + 1] = numPins;
+                }
+                else
+                {
+                    score.RunningTotalList.Add(score.TotalScore); //what about strike
+                    score.ResultList.Add(new List<int>() { numPins });
+                }
+            }
+            else if(prevFrameIdx == 10)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            } */
+
+            await _playersDataService.UpdatePlayerData(score);
+
+            return score;
         }
     }
 }

@@ -7,8 +7,8 @@ namespace BowlingApi.DTOs.HelperModels
 {
     public class FrameScores
     {
-        public List<Frame> Frames { get; set; } = new List<Frame>();
+        public List<List<int>> Frames { get; set; } = new List<List<int>>();
 
-        public Tuple<int, int, int> BonusFrame { get; set; } = new Tuple<int, int, int>(0, 0, 0);
+        //public Tuple<int, int, int> BonusFrame { get; set; } = new Tuple<int, int, int>(0, 0, 0);
     }
 }

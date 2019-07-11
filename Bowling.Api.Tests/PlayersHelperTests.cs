@@ -3,6 +3,8 @@ using BowlingApi.Services;
 using BowlingApi.Services.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Bowling.Api.Tests
@@ -12,6 +14,7 @@ namespace Bowling.Api.Tests
     {
         private Mock<IPlayersDataService> mockPlayersDataService;
         private PlayersHelper playersHelper;
+        private readonly Guid PLAYER_ID = Guid.NewGuid();
 
         [TestInitialize]
         public void Initialize()
@@ -38,7 +41,7 @@ namespace Bowling.Api.Tests
             //Assert.IsTrue(Guid.TryParse(playerDataResult.PlayerId, out var guidResult));
         }
 
-        [TestMethod]
+        [TestMethod] //todo check PLAYER_ID matches on all of them
         public async Task UpdateScoreSingleValueTest()
         {
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(new PlayerGameData()));
@@ -46,58 +49,237 @@ namespace Bowling.Api.Tests
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 4;
-            var result = await helper.UpdateScore(4);
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
             Assert.AreEqual(result.TotalScore, numPins);
-            Assert.AreEqual(result.FrameScores.Frames[0].Scores.Item1, numPins);
+            Assert.AreEqual(result.ResultList[0][0], numPins);
+        }
+
+        private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<int> frame)
+        {
+            return new PlayerGameData
+            {
+                TotalScore = totalScore,
+                RunningTotalList = runningTotal,
+                ResultList = new List<List<int>>() { frame }
+            };
         }
 
         [TestMethod]
         public async Task UpdateScoreSecondValueTest()
         {
 
+            var playerScore = new PlayerGameData();
+            var oldTotalScore = 4;
+            var oldRunningTotalList = new List<int> { 4 };
+            var oldFrame = new List<int>() { 4 };
+
+            var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+            playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+
+            //playerScore.TotalScore = oldTotalScore;
+            //playerScore.RunningTotalList = oldRunningTotalList;
+            //playerScore.ResultList = oldResultList;
+
+            //var playerScoreOld = playerScore;
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 5;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(result.TotalScore, oldPlayerScore.TotalScore + numPins);
+            Assert.AreEqual(result.RunningTotalList[0], oldPlayerScore.TotalScore + numPins);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], numPins);           
         }
 
         [TestMethod]
         public async Task UpdateScoreThirdValueTest()
-        {
+        {                       
+            var playerScore = new PlayerGameData();
+            var oldTotalScore = 9;
+            var oldRunningTotalList = new List<int> { 9 };
+            var oldFrame = new List<int>() { 4, 5 };
 
+            var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+            playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 6;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(result.TotalScore, oldPlayerScore.TotalScore + numPins);
+            Assert.AreEqual(result.RunningTotalList[1], oldPlayerScore.TotalScore + numPins);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], oldPlayerScore.ResultList[0][1]);
+            Assert.AreEqual(result.ResultList[1][0], numPins);
         }
 
         [TestMethod]
-        public async Task UpdateScoreMissOneShotTest()
+        public async Task UpdateScoreMissFirstShotTest()
         {
+            var playerScore = new PlayerGameData();            
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 0;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(result.TotalScore, 0);
+            Assert.AreEqual(result.RunningTotalList[0], 0);
+            Assert.AreEqual(result.ResultList[0][0], 0);            
         }
 
         [TestMethod]
-        public async Task UpdateScoreMissBothShotsTest()
+        public async Task UpdateScoreMissBothFirstShotsTest()
         {
+            var playerScore = new PlayerGameData();
+            var oldTotalScore = 0;
+            var oldRunningTotalList = new List<int> { 0 };
+            var oldFrame = new List<int>() { 0 };
 
+            //var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+            playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 0;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(result.TotalScore, 0);
+            Assert.AreEqual(result.RunningTotalList[0], 0);
+            Assert.AreEqual(result.ResultList[0][0], 0);
+            Assert.AreEqual(result.ResultList[0][1], 0);
+        }
+
+        [TestMethod]
+        public async Task UpdateScoreMissSecondShotTest()
+        {            
+            var playerScore = new PlayerGameData();
+            var oldTotalScore = 4;
+            var oldRunningTotalList = new List<int> { 4 };
+            var oldFrame = new List<int>() { 4 };
+
+            var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+            playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 0;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(result.TotalScore, oldPlayerScore.TotalScore);
+            Assert.AreEqual(result.RunningTotalList[0], oldPlayerScore.RunningTotalList[0]);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], numPins);
         }
 
         [TestMethod]
         public async Task UpdateScoreSpareTest()
-        {
+        {           
+            var playerScore = new PlayerGameData();
+            var oldTotalScore = 4;
+            var oldRunningTotalList = new List<int> { 4 };
+            var oldFrame = new List<int>() { 4 };
 
+            var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+            playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 6;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(result.TotalScore, 10);
+            Assert.AreEqual(result.RunningTotalList[0], oldPlayerScore.RunningTotalList[0]);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], numPins);
         }
 
         [TestMethod]
         public async Task UpdateScoreShotAfterSpareTest()
-        {
+        {            
+            var playerScore = new PlayerGameData();
+            var oldTotalScore = 10;
+            var oldRunningTotalList = new List<int> { 10 };
+            var oldFrame = new List<int>() { 4, 10 };
 
+            var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+            playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 6;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(result.TotalScore, 10 + numPins + numPins);
+            Assert.AreEqual(result.RunningTotalList[0], 10 + numPins);
+            Assert.AreEqual(result.RunningTotalList[1], numPins);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], oldPlayerScore.ResultList[0][1]);
+            Assert.AreEqual(result.ResultList[1][0], numPins);
         }
 
         [TestMethod]
         public async Task UpdateScoreStrikeAfterSpareTest()
-        {
+        {            
+            var playerScore = new PlayerGameData();
+            var oldTotalScore = 10;
+            var oldRunningTotalList = new List<int> { 10 };
+            var oldFrame = new List<int>() { 4, 10 };
 
+            var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+            playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 10;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(result.TotalScore, 10 + numPins + numPins);
+            Assert.AreEqual(result.RunningTotalList[0], 10 + numPins);
+            Assert.AreEqual(result.RunningTotalList[1], 10 + numPins + numPins);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], oldPlayerScore.ResultList[0][1]);
+            Assert.AreEqual(result.ResultList[1][0], numPins);
         }
 
         [TestMethod]
         public async Task UpdateScoreSpareAfterMissTest()
         {
+            var playerScore = new PlayerGameData();     //todo need to tell decide on how to instatiate ResultList or specify the frame num via Api       
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 10;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(result.TotalScore, 10 + numPins + numPins);
+            Assert.AreEqual(result.RunningTotalList[0], 10 + numPins);
+            Assert.AreEqual(result.RunningTotalList[1], numPins);
+            Assert.AreEqual(result.ResultList[0][0], playerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], playerScore.ResultList[0][1]);
+            Assert.AreEqual(result.ResultList[1][0], numPins);
         }
 
         [TestMethod]

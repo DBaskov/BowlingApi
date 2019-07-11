@@ -59,7 +59,7 @@ namespace BowlingApi.Controllers
 
         //[HttpGet("{playerId}/scores/{cellId}")] //after score been edited
 
-        [HttpPatch("players/{playerId}/scores")] //every time bowling pins are knocked down
+        [HttpPost("players/{playerId}/scores")] //every time bowling pins are knocked down
         public async Task<ActionResult<ScoresOnCurrentFrameOut>> NewScorePut(string playerId, [FromBody]int numPins) //return new total
         {
             throw new NotImplementedException();

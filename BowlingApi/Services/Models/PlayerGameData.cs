@@ -16,10 +16,10 @@ namespace BowlingApi.Services.Models
 
         public int TotalScore { get; set; } = 0;
 
+        public int CurrentFrame { get; set; }
+
         public List<int> RunningTotalList { get; set; } = new List<int>();
 
-        public List<int> ResultList { get; set; } = new List<int>();
-
-        public FrameScores FrameScores { get; set; } = new FrameScores();
+        public List<List<int>> ResultList { get; set; } = new List<List<int>>();
     }
 }
