@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Bowling.Api.Tests
 {
-    [TestClass]
+    [TestClass] //todo flip expected and actual values
     public class PlayersHelperTests
     {
         private Mock<IPlayersDataService> mockPlayersDataService;
         private PlayersHelper playersHelper;
         private readonly Guid PLAYER_ID = Guid.NewGuid();
-
+        
         [TestInitialize]
         public void Initialize()
         {
@@ -431,5 +431,135 @@ namespace Bowling.Api.Tests
         {
 
         }
+
+        [TestMethod]
+        public async Task GetScorOneShotsBackAndFrameNumOneScoreTest()
+        {
+            var resultList = new List<List<int>>() { new List<int>() { 4 } };
+            var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 1);
+
+            Assert.AreEqual(result.Item2, -1);
+            Assert.AreEqual(result.Item1, 0);
+        }
+
+        [TestMethod]
+        public async Task GetScorOneShotsBackAndFrameNumTwoScoreTest()
+        {
+            var resultList = new List<List<int>>() { new List<int>() { 4, 4 } };
+            var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 2);
+            
+            Assert.AreEqual(4, result.Item1);
+            Assert.AreEqual(1, result.Item2);
+        }
+
+        [TestMethod]
+        public async Task GetScorOneShotsBackAndFrameNumThreeScoreTest()
+        {
+            var resultList = new List<List<int>>() { new List<int>() { 4, 4 }, new List<int>() { 5 } };
+            var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 2, 1);
+
+            Assert.AreEqual(4, result.Item1);
+            Assert.AreEqual(1, result.Item2);
+        }
+
+        [TestMethod]
+        public async Task GetScorOneShotsBackAndFrameNumSpareFristFrameTest()
+        {
+            var resultList = new List<List<int>>() { new List<int>() { 5, 10 } };
+            var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 1);
+
+            Assert.AreEqual( 0, result.Item1);
+            Assert.AreEqual(-1, result.Item2);
+        }
+
+        [TestMethod]
+        public async Task GetScorOneShotsBackAndFrameNumSpareSecondFrameTest()
+        {
+            var resultList = new List<List<int>>() { new List<int>() { 4, 4 }, new List<int>() { 5, 10 } };
+            var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 2, 2);
+
+            Assert.AreEqual(4, result.Item1);
+            Assert.AreEqual(1, result.Item2);
+        }
+
+
+        [TestMethod]
+        public async Task GetScorOneShotsBackAndFrameNumStrikeFirstFrame()
+        {
+            var resultList = new List<List<int>>() { new List<int>() { 10, -1 } };
+            var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 1);
+
+            Assert.AreEqual(0 , result.Item1);
+            Assert.AreEqual(-1, result.Item2);
+        }
+
+        [TestMethod]
+        public async Task GetScorOneShotsBackAndFrameNumStrikeSecondFrameTest()
+        {
+            var resultList = new List<List<int>>() { new List<int>() { 4, 4 }, new List<int>() { 10, -1 } };
+            var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 2, 1);
+
+            Assert.AreEqual(4, result.Item1);
+            Assert.AreEqual(1, result.Item2);
+        }
+
+        [TestMethod]
+        public async Task GetScorOneShotsBackAndFrameNumStrikeSecondFrameSecondCellTest()
+        {
+            var resultList = new List<List<int>>() { new List<int>() { 4, 4 }, new List<int>() { 10, -1 } };
+            var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 2, 2);
+
+            Assert.AreEqual(0 , result.Item1);
+            Assert.AreEqual(-1, result.Item2);
+        }
+
+        [TestMethod]
+        public async Task GetScoreTwoShotsBackFirstShotTest()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task GetScoreTwoShotsBackSecondShotTest()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task GetScoreTwoShotsBackThirdShotTest()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task GetScoreTwoShotsBackFourthShotTest()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task GetScoreTwoShotsBackSpareShotBeforeTest()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task GetScoreTwoShotsBackStrikeShotBeforeTest()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task GetScoreTwoShotsBackThirdShotSpareFirstFrameTest()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task GetScoreTwoShotsBackThirdShotStrikeFirstFrameTest()
+        {
+
+        }
+        
     }
 }
