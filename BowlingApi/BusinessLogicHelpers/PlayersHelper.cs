@@ -77,36 +77,37 @@ namespace BowlingApi.BusinessLogicHelpers
             return playersList;
         }        
 
-        public Tuple<int, int> GetScoreTwoShotsBackAndFrameNum(List<List<int>> resultList, int curFrameNum, int curCellNum)
+        //todo simply found strike/spare logic
+        public Tuple<bool,int> FoundStrikeTwoShotsBackAndFrameNum(List<List<int>> resultList, int curFrameNum, int curCellNum)
         {
             if(curFrameNum < 2)
             {
-                return new Tuple<int, int>(0, -1);
+                return new Tuple<bool, int>(false, -1);
             }
 
             var frameNumResult = curFrameNum - 2; //zero indexed, frame before current
             if (curCellNum == 1)
-            {
-                return new Tuple<int, int>(resultList[frameNumResult][0], frameNumResult+1); //we have a strike ex [10][-1] [4][4]                
+            {               
+                if (resultList[frameNumResult][0] == 10) //found a strike one cell back
+                {
+                    if (frameNumResult > 0)
+                    {                       
+                        frameNumResult -= 1;
+                        if (resultList[frameNumResult][1] == -1)
+                        {
+                            return new Tuple<bool, int>(true, frameNumResult + 1);
+                        }                        
+                    }                    
+                }
+                return new Tuple<bool, int>(false, -1);
             }
             else
             {
-                if (resultList[frameNumResult][0] == 10) // if 10 is in first cell, we have a strike [10][-1] [4], need to go back one more
-                {
-                    if (curFrameNum > 2)
-                    {
-                        frameNumResult -= 1; //one more frame back
-                        return new Tuple<int, int>(resultList[frameNumResult][1], frameNumResult+1);
-                    }
-                    else
-                    {
-                        return new Tuple<int, int>(0, -1);
-                    }
-                }
-                else
-                {
-                    return new Tuple<int, int>(resultList[frameNumResult][1], frameNumResult+1);
-                }
+                if (resultList[frameNumResult][1] == -1) // if 10 is in first cell, we have a strike [10][-1] [4], need to go back one more
+                {                   
+                    return new Tuple<bool, int>(true, frameNumResult+1);                                     
+                }               
+                return new Tuple<bool, int>(false, -1);               
             }
         }
 
@@ -122,26 +123,12 @@ namespace BowlingApi.BusinessLogicHelpers
             var frameNumResultIdx = curFrameNum - 1;
             if (curCellNum == 1)
             {
-                return new Tuple<int, int>(resultList[frameNumResultIdx - 1][1], frameNumResultIdx);               
+                frameNumResultIdx -= 1;
+                return new Tuple<int, int>(resultList[frameNumResultIdx][1], frameNumResultIdx + 1);               
             }
             else
-            {
-                if(resultList[frameNumResultIdx][curCellNum-1] != 10)
-                {                   
-                     return new Tuple<int, int>(resultList[frameNumResultIdx][0], frameNumResultIdx + 1);                   
-                }
-                else //it's a spare
-                {
-                    frameNumResultIdx -= 1;
-                    if (frameNumResultIdx >= 0)
-                    {
-                        return new Tuple<int, int>(resultList[frameNumResultIdx][1], frameNumResultIdx + 1);
-                    }
-                    else
-                    {
-                        return new Tuple<int, int>(0, -1);
-                    }
-                }               
+            {          
+                return new Tuple<int, int>(resultList[frameNumResultIdx][0], frameNumResultIdx + 1);                                                                 
             }
         }
 
@@ -167,16 +154,24 @@ namespace BowlingApi.BusinessLogicHelpers
             var resultList = playerScore.ResultList;
             if (frameNum > 1)
             {
-                var scoreAndFrameTwoShots = GetScoreTwoShotsBackAndFrameNum(resultList, frameNum, cellNum);
+                var foundStrikeAndFrame = FoundStrikeTwoShotsBackAndFrameNum(resultList, frameNum, cellNum);
 
-                if(scoreAndFrameTwoShots.Item1 == -1) {//it's a strike
-                    var scoreAndFrameOneShot = GetScoreOneShotBackAndFrameNum(resultList, frameNum, cellNum);
+                if (foundStrikeAndFrame.Item1)
+                {
+                    var shotBeforeResult = GetScoreOneShotBackAndFrameNum(resultList, frameNum, cellNum);
 
-                    var strikeFrameNewScore = scoreAndFrameTwoShots.Item1 + scoreAndFrameOneShot.Item1 + numPins; //expect strikes and spare to have score of 10
-                    RecalculateRunningTotal(playerScore.RunningTotalList, strikeFrameNewScore, scoreAndFrameTwoShots.Item2);
+                    var shotBefore = shotBeforeResult.Item1;
+                    if (shotBeforeResult.Item1 == -1)
+                    {
+                        shotBefore = 10;
+                    }
+
+                    var newScore = shotBefore + numPins + 10; //spares are handled
+
+                    RecalculateRunningTotal(playerScore.RunningTotalList, newScore, foundStrikeAndFrame.Item2);
                     playerScore.TotalScore = playerScore.RunningTotalList[frameNum - 1];
                     return true;
-                }               
+                }
             }
             
             return false;           
@@ -192,7 +187,7 @@ namespace BowlingApi.BusinessLogicHelpers
                 if (scoreAndFrameOneShot.Item1 == 10) //it's a spare
                 {
 
-                    var spareFrameNewScore = scoreAndFrameOneShot.Item1 + numPins; //expect strikes and spare to have score of 10
+                    var spareFrameNewScore = playerScore.RunningTotalList[scoreAndFrameOneShot.Item2-1] + numPins; //expect strikes and spare to have score of 10
                     RecalculateRunningTotal(playerScore.RunningTotalList, spareFrameNewScore, scoreAndFrameOneShot.Item2);
                     playerScore.TotalScore = playerScore.RunningTotalList[frameNum - 1];
                     return true;
@@ -213,59 +208,55 @@ namespace BowlingApi.BusinessLogicHelpers
             var score = await _playersDataService.GetPlayerData(playerId.ToString());
 
             score.TotalScore += numPins;
+            var frame = new List<int>() { numPins };
 
-            var frame = new List<int>();
-            //var curFrameIdx = 0;
-           // var curCellIdx = 0;
-
-            var frameNum = score.ResultList.Count;
-            if (frameNum > 0) //optimize this later
-            {
-                frame = score.ResultList[frameNum - 1];
-
-                if (frame.Count == 1) //also logic for 10
-                {
-                    score.RunningTotalList[frameNum - 1] = score.TotalScore;                    
-                    frame.Add(numPins);
-                }
-                else
-                {
-                    frame = new List<int>() { numPins };
-                    score.RunningTotalList.Add(score.TotalScore);
-                    score.ResultList.Add(frame);
-                }
-
-                HandleStrikesAndSpares(score, score.ResultList.Count, frame.Count, numPins);
-            }
-            else
+            if (score.ResultList.Count == 0) //perhaps move this to models instatiation
             {
                 score.RunningTotalList.Add(score.TotalScore);
-                score.ResultList.Add(new List<int>() { numPins });
-            }
-            
-            /*
-            if (prevFrameIdx < 10) //check this logic
-            {
-                if(prevCellIdx == 0)
+                frame = new List<int>() { numPins };
+                score.ResultList.Add(frame);
+                if (numPins == 10)
                 {
-                    score.RunningTotalList[prevFrameIdx] = score.TotalScore;
-                    score.ResultList[prevFrameIdx][prevCellIdx + 1] = numPins;
+                    frame.Add(-1);
                 }
-                else
-                {
-                    score.RunningTotalList.Add(score.TotalScore); //what about strike
-                    score.ResultList.Add(new List<int>() { numPins });
-                }
-            }
-            else if(prevFrameIdx == 10)
-            {
-                throw new NotImplementedException();
+
             }
             else
             {
-                throw new NotImplementedException();
-            } */
 
+                frame = score.ResultList[score.ResultList.Count - 1];
+                var cellNum = frame.Count;
+                if (cellNum > 0) //optimize this later
+                {
+
+                    if (cellNum == 1) //also logic for 10
+                    {
+                        score.RunningTotalList[score.ResultList.Count - 1] = score.TotalScore;
+                        frame.Add(numPins);
+                        cellNum++;
+                    }
+                    else
+                    {
+                        frame = new List<int>() { numPins };
+                        cellNum = frame.Count;
+                        score.RunningTotalList.Add(score.TotalScore);
+                        if (numPins == 10)
+                        {
+                            frame.Add(-1);
+                        }
+                        score.ResultList.Add(frame);
+                    }
+                }
+                else
+                {
+                    score.RunningTotalList.Add(score.TotalScore);
+                    score.ResultList.Add(new List<int>() { numPins });
+                    cellNum = 1;
+                }
+
+                HandleStrikesAndSpares(score, score.ResultList.Count, cellNum, numPins);
+            }
+            
             await _playersDataService.UpdatePlayerData(score);
 
             return score;
