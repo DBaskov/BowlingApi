@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bowling.Api.DTOs;
 using BowlingApi.Common.CustomExceptions;
-using BowlingApi.Services;
-using BowlingApi.Services.Models;
-using BowlingApi.Services.Models.HelperModels;
+using BowlingApi.Repositories.Models;
+using BowlingApi.Repositories.Models.HelperModels;
+using BowlingApi.Repository;
 
 namespace BowlingApi.BusinessLogicHelpers
 {
@@ -13,8 +14,8 @@ namespace BowlingApi.BusinessLogicHelpers
     {
         enum SpecialScores { Spare = 10, Strike = 11}; 
 
-        public readonly IPlayersDataService _playersDataService;
-        public PlayersHelper(IPlayersDataService playersDataService)
+        public readonly IPlayersDataRepository _playersDataService;
+        public PlayersHelper(IPlayersDataRepository playersDataService)
         {
             _playersDataService = playersDataService;
         }
@@ -64,7 +65,6 @@ namespace BowlingApi.BusinessLogicHelpers
                     new PlayerGameData
                     {
                         PlayerId = Guid.NewGuid().ToString(),
-                        MatchId = matchId,
                         PlayerName = playerName
                     });
             }
@@ -76,41 +76,7 @@ namespace BowlingApi.BusinessLogicHelpers
             }
 
             return playersList;
-        }        
-        /*
-        //todo simply found strike/spare logic
-        public Tuple<bool,int> FoundStrikeTwoShotsBackAndFrameNum(List<List<int>> resultList, int curFrameNum, int curCellNum)
-        {
-            if(curFrameNum < 2)
-            {
-                return new Tuple<bool, int>(false, -1);
-            }
-
-            var frameNumResult = curFrameNum - 2; //zero indexed, frame before current
-            if (curCellNum == 1)
-            {               
-                if (resultList[frameNumResult][0] == 10) //found a strike one cell back
-                {
-                    if (frameNumResult > 0)
-                    {                       
-                        frameNumResult -= 1;
-                        if (resultList[frameNumResult][1] == -1)
-                        {
-                            return new Tuple<bool, int>(true, frameNumResult + 1);
-                        }                        
-                    }                    
-                }
-                return new Tuple<bool, int>(false, -1);
-            }
-            else
-            {
-                if (resultList[frameNumResult][1] == -1) // if 10 is in first cell, we have a strike [10][-1] [4], need to go back one more
-                {                   
-                    return new Tuple<bool, int>(true, frameNumResult+1);                                     
-                }               
-                return new Tuple<bool, int>(false, -1);               
-            }
-        } */
+        }               
 
         public Tuple<bool, int> FoundStrikeTwoShotsBackAndFrameNum(List<Frame> resultList, int curFrameNum, int curCellNum)
         {
@@ -129,12 +95,7 @@ namespace BowlingApi.BusinessLogicHelpers
                     {
                         return new Tuple<bool, int>(true, frameNumResult + 1);
                     }
-                }
-                /*
-                if (frameNumResult >= 0 && resultList[frameNumResult].IsStrike) //found a strike one cell back
-                {                                         
-                    return new Tuple<bool, int>(true, frameNumResult + 1);                                            
-                } */
+                }               
 
                 return new Tuple<bool, int>(false, -1);
             }
@@ -190,29 +151,7 @@ namespace BowlingApi.BusinessLogicHelpers
                 }
                 return new Tuple<int, int>(resultList[frameNumResultIdx].ScoreCells[0], frameNumResultIdx + 1);
             }
-        }
-
-        /*
-        //returns the score and frame number
-        //if it returns -1 then it's a strike
-        public Tuple<int,int> GetScoreOneShotBackAndFrameNum(List<List<int>> resultList, int curFrameNum, int curCellNum)
-        {
-            if (curFrameNum == 1 && curCellNum == 1)
-            {
-                return new Tuple<int, int>(0, -1);
-            }
-
-            var frameNumResultIdx = curFrameNum - 1;
-            if (curCellNum == 1)
-            {
-                frameNumResultIdx -= 1;
-                return new Tuple<int, int>(resultList[frameNumResultIdx][1], frameNumResultIdx + 1);               
-            }
-            else
-            {          
-                return new Tuple<int, int>(resultList[frameNumResultIdx][0], frameNumResultIdx + 1);                                                                 
-            }
-        } */
+        }        
 
         public void RecalculateRunningTotal(List<int> runningTotal, int newScore, int frameNum)
         {
@@ -353,6 +292,34 @@ namespace BowlingApi.BusinessLogicHelpers
             await _playersDataService.UpdatePlayerData(score); 
 
             return score; 
-        } 
+        }
+
+        public async Task<PlayerGameData> GetPlayerGameData(Guid playerId)
+        {
+
+            var result = await _playersDataService.GetPlayerData(playerId.ToString());
+            return result;           
+        }
+
+        public async Task<bool> ReplacePlayerGameData(PlayerGameDataIn playerGameDataIn)
+        {
+            var playerGameData = new PlayerGameData
+            {
+                PlayerId = playerGameDataIn.PlayerId,
+                PlayerName = playerGameDataIn.PlayerName,
+                TotalScore = playerGameDataIn.TotalScore,
+                ResultList = playerGameDataIn.ResultList,
+                RunningTotalList = playerGameDataIn.RunningTotalList
+            };
+
+            var success = await _playersDataService.ReplacePlayerData(playerGameData);
+
+            if (!success)
+            {
+                throw new MongoOperationFailException("Mongo 'AddPlayers' operation failed. ");
+            }
+
+            return success;
+        }
     }
 }

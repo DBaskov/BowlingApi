@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using BowlingApi.BusinessLogicHelpers;
 using BowlingApi.DBContexts;
 using BowlingApi.DBContexts.Models;
-using BowlingApi.Services;
+using BowlingApi.Repositories;
+using BowlingApi.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,7 +34,7 @@ namespace BowlingApi
             services.Configure<PlayersMongoDbSetings>(Configuration.GetSection(nameof(PlayersMongoDbSetings)));
             services.AddSingleton<IPlayersMongoDbSetings>(s => s.GetRequiredService<IOptions<PlayersMongoDbSetings>>().Value);
             services.TryAddSingleton<IMongoDBContext, MongoDBContext>();
-            services.TryAddSingleton<IPlayersDataService, PlayersDataMongoService>();
+            services.TryAddSingleton<IPlayersDataRepository, PlayersDataMongoRepository>();
             services.TryAddSingleton<IPlayersHelper, PlayersHelper>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

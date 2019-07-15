@@ -1,12 +1,12 @@
-﻿using BowlingApi.Services.Models;
+﻿using BowlingApi.Repositories.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BowlingApi.Services
+namespace BowlingApi.Repository
 {
-    public interface IPlayersDataService
+    public interface IPlayersDataRepository
     {
         Task<bool> AddPlayers(List<PlayerGameData> players);
 
@@ -17,6 +17,8 @@ namespace BowlingApi.Services
         Task<bool> DeletePlayer(string playerId);
 
         Task<bool> UpdatePlayerData(PlayerGameData updatedGameData);
+
+        Task<bool> ReplacePlayerData(PlayerGameData playerGameDataToReplace);
 
         Task<PlayerGameData> GetPlayerData(string playerId);
     }

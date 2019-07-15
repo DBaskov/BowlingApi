@@ -1,4 +1,5 @@
-﻿using BowlingApi.Services.Models;
+﻿using Bowling.Api.DTOs;
+using BowlingApi.Repositories.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,11 @@ namespace BowlingApi.BusinessLogicHelpers
     {
         Task<List<PlayerGameData>> InstatiateBulkPlayerGameData(List<string> playerNames);
 
+        Task<PlayerGameData> GetPlayerGameData(Guid playerId);
+
         Task<PlayerGameData> InstiateAndInsertPlayerGameData(string playerName);
+
+        Task<bool> ReplacePlayerGameData(PlayerGameDataIn playerGameData);
 
         Task<PlayerGameData> UpdateScore(Guid playerId, int numPins);
 

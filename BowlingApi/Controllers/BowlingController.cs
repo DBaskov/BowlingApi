@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bowling.Api.DTOs;
 using BowlingApi.BusinessLogicHelpers;
+using BowlingApi.Common.CustomExceptions;
 using BowlingApi.DTOs;
-using BowlingApi.Services;
-using BowlingApi.Services.Models;
+using BowlingApi.Repositories.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,57 +21,54 @@ namespace BowlingApi.Controllers
         public BowlingController(IPlayersHelper playersHelper)
         {
             _playersHelper = playersHelper;
-        }        
-        /*
-        [HttpPost("bulkPlayers")]
-        public async Task<ActionResult<List<PlayerStartInfoOut>>> CreatePlayersPost([FromBody]List<string> playerNames)
-        {           
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var result = await _playersHelper.InstatiateBulkPlayerGameData(playerNames);
-
-                return Ok(result);
-
-            } catch(Exception)
-            {
-                return StatusCode(500);
-            }
-        } */
+        }                
 
         [HttpPost("")] //check model state
-        public async Task<ActionResult<PlayerGameData>> CreatePlayer([FromBody] string playerName)
+        public async Task<ActionResult<PlayerGameDataOut>> CreatePlayer([FromBody] string playerName)
         {           
             try
             {
                 var result = await _playersHelper.InstiateAndInsertPlayerGameData(playerName);
-                return StatusCode(201, result);
+                return StatusCode(201, new PlayerGameDataOut
+                {
+                    PlayerId = result.PlayerId,
+                    PlayerName = result.PlayerName,
+                    TotalScore = result.TotalScore,
+                    ResultList = result.ResultList,
+                    RunningTotalList = result.RunningTotalList
+                });
             }
             catch(Exception)
             {
                 return StatusCode(500);
             }
         }
-    
-        /*
-        [HttpGet("{id}/scores")]
-        public async Task<ActionResult<List<PlayerScoreInfo>>> PlayersScoreInfoGet(string id)
+
+        [HttpPut("{playerId}")] //for editing score
+        public async Task<ActionResult> PutPlayerGameData(string playerId, [FromBody]PlayerGameDataIn playerGameData) //return new total
         {
-            throw new NotImplementedException();
-        } */
-
-        [HttpPut("players/{playerId}/scores/{cellId}")] //for editing score
-
-        //[HttpGet("{playerId}/scores/{cellId}")] //after score been edited
+            try
+            {
+                var result = await _playersHelper.ReplacePlayerGameData(playerGameData);
+                if (result)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
 
         [HttpPost("{playerId}/calculateNewScore")] //every time bowling pins are knocked down
-        public async Task<ActionResult<PlayerGameData>> CalculateNewScore(string playerId, [FromBody]int numPins) //return new total
+        public async Task<ActionResult<PlayerGameDataOut>> CalculateNewScore(string playerId, [FromBody]int numPins) //return new total
         {           
-            if(Guid.TryParse(playerId, out var playerIdGuid))
+            if(!Guid.TryParse(playerId, out var playerIdGuid))
             {
                 return StatusCode(400, "playerId: " + playerId + " is not in proper format");
             }
@@ -78,43 +76,79 @@ namespace BowlingApi.Controllers
             try
             {
                 var result = await _playersHelper.UpdateScore(playerIdGuid, numPins);
-                return Ok(result);
+                return Ok(new PlayerGameDataOut
+                {
+                    PlayerId = result.PlayerId,
+                    PlayerName = result.PlayerName,
+                    TotalScore = result.TotalScore,
+                    ResultList = result.ResultList,
+                    RunningTotalList = result.RunningTotalList
+                });
             }
             catch(ItemNotFoundInMongoException)
             {
                 return NotFound();
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500);
+            }
+        }
+        
+        [HttpGet("{playerId}")] //after score been edited, we would need to fetch again
+        public async Task<ActionResult<PlayerGameDataOut>> PlayerDataGet(string playerId) //return new total
+        {
+            if (!Guid.TryParse(playerId, out var playerIdGuid))
+            {
+                return StatusCode(400, "playerId: " + playerId + " is not in proper format");
+            }
+
+            try
+            {
+                var result = await _playersHelper.GetPlayerGameData(playerIdGuid);
+                return Ok(new PlayerGameDataOut
+                {
+                    PlayerId = result.PlayerId,
+                    PlayerName = result.PlayerName,
+                    TotalScore = result.TotalScore,
+                    ResultList = result.ResultList,
+                    RunningTotalList = result.RunningTotalList
+                }); 
+            }
+            catch (ItemNotFoundInMongoException)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+        }               
+
+        [HttpDelete("{playerId}")]
+        public async Task<ActionResult> DeletePlayer(string playerId)
+        {
+            if (!Guid.TryParse(playerId, out var playerIdGuid))
+            {
+                return StatusCode(400, "playerId: " + playerId + " is not in proper format");
+            }
+            try
+            {
+                var deleted = await _playersHelper.DeletePlayerGameData(playerId);
+                if (deleted)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch(Exception)
             {
                 return StatusCode(500);
             }
         }
-
-        [HttpGet("{playerId}/scores")] //after score been edited, we would need to fetch again
-        public async Task<ActionResult<ScoresOnCurrentFrameOut>> NewScoreGet(string playerId) //return new total
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpPut("bulkPlayers")]
-        public async Task<ActionResult> NewGamePut([FromBody]List<string> playerIds)
-        {
-            throw new NotImplementedException();
-        }
-
-        /*
-        [HttpGet("{id}/players/{id}/scores/current")]
-        public async Task<ActionResult<ScoresOnCurrentFrameOut>> ScoreCurrentGet()
-        {
-            throw new NotImplementedException();
-        } */
-
-        [HttpDelete("players/{playerId}")]
-        public async Task<ActionResult> DeletePlayer(string playerId)
-        {
-            throw new NotImplementedException();
-        }
-        
-        
+               
     }
 }

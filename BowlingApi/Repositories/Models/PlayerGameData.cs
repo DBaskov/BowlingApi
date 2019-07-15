@@ -1,11 +1,14 @@
-﻿using BowlingApi.Services.Models.HelperModels;
+﻿
+using BowlingApi.Repositories.Models.HelperModels;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BowlingApi.Services.Models
+namespace BowlingApi.Repositories.Models
 {
+    [BsonIgnoreExtraElements]
     public class PlayerGameData
     {
         public string PlayerId { get; set; }

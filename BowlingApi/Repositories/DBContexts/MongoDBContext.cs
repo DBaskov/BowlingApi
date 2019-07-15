@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BowlingApi.DBContexts.Models;
-using BowlingApi.Services.Models;
+using BowlingApi.Repositories.Models;
 using MongoDB.Driver;
 
 namespace BowlingApi.DBContexts

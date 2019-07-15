@@ -1,4 +1,4 @@
-﻿using BowlingApi.Services.Models;
+﻿using BowlingApi.Repositories.Models;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;

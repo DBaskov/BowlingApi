@@ -1,7 +1,7 @@
 using BowlingApi.BusinessLogicHelpers;
-using BowlingApi.Services;
-using BowlingApi.Services.Models;
-using BowlingApi.Services.Models.HelperModels;
+using BowlingApi.Repositories.Models;
+using BowlingApi.Repositories.Models.HelperModels;
+using BowlingApi.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -13,14 +13,14 @@ namespace Bowling.Api.Tests
     [TestClass] //todo flip expected and actual values
     public class PlayersHelperTests
     {
-        private Mock<IPlayersDataService> mockPlayersDataService;
+        private Mock<IPlayersDataRepository> mockPlayersDataService;
         private PlayersHelper playersHelper;
         private readonly Guid PLAYER_ID = Guid.NewGuid();
 
         [TestInitialize]
         public void Initialize()
         {
-            mockPlayersDataService = new Mock<IPlayersDataService>(MockBehavior.Strict);
+            mockPlayersDataService = new Mock<IPlayersDataRepository>(MockBehavior.Strict);
 
             //mockPlayersDataService.Setup(x => x.AddPlayer(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
             // mockPlayersDataService.Setup(x => x.AddPlayers(It.IsAny<List<PlayerGameData>>())).Returns(Task.FromResult(true));
