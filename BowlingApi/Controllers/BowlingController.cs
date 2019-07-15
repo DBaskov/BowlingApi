@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BowlingApi.Controllers
 {
-    [Route("api/bowling/v1")]
+    [Route("api/bowling/v1/players")]
     [ApiController]
     public class BowlingController : ControllerBase
     {
@@ -20,14 +20,8 @@ namespace BowlingApi.Controllers
         public BowlingController(IPlayersHelper playersHelper)
         {
             _playersHelper = playersHelper;
-        }
+        }        
         /*
-        [HttpPost]
-        public async Task<ActionResult<MatchStartOut>> MatchStartPost([FromBody] List<string> playerNames)
-        {
-            throw new NotImplementedException();
-        } */
-
         [HttpPost("bulkPlayers")]
         public async Task<ActionResult<List<PlayerStartInfoOut>>> CreatePlayersPost([FromBody]List<string> playerNames)
         {           
@@ -46,8 +40,22 @@ namespace BowlingApi.Controllers
             {
                 return StatusCode(500);
             }
-        }
+        } */
 
+        [HttpPost("")] //check model state
+        public async Task<ActionResult<PlayerGameData>> CreatePlayer([FromBody] string playerName)
+        {           
+            try
+            {
+                var result = await _playersHelper.InstiateAndInsertPlayerGameData(playerName);
+                return StatusCode(201, result);
+            }
+            catch(Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+    
         /*
         [HttpGet("{id}/scores")]
         public async Task<ActionResult<List<PlayerScoreInfo>>> PlayersScoreInfoGet(string id)
@@ -59,13 +67,30 @@ namespace BowlingApi.Controllers
 
         //[HttpGet("{playerId}/scores/{cellId}")] //after score been edited
 
-        [HttpPost("players/{playerId}/scores")] //every time bowling pins are knocked down
-        public async Task<ActionResult<ScoresOnCurrentFrameOut>> NewScorePut(string playerId, [FromBody]int numPins) //return new total
-        {
-            throw new NotImplementedException();
+        [HttpPost("{playerId}/calculateNewScore")] //every time bowling pins are knocked down
+        public async Task<ActionResult<PlayerGameData>> CalculateNewScore(string playerId, [FromBody]int numPins) //return new total
+        {           
+            if(Guid.TryParse(playerId, out var playerIdGuid))
+            {
+                return StatusCode(400, "playerId: " + playerId + " is not in proper format");
+            }
+
+            try
+            {
+                var result = await _playersHelper.UpdateScore(playerIdGuid, numPins);
+                return Ok(result);
+            }
+            catch(ItemNotFoundInMongoException)
+            {
+                return NotFound();
+            }
+            catch(Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
-        [HttpGet("players/{playerId}/scores")] //after score been edited, we would need to fetch again
+        [HttpGet("{playerId}/scores")] //after score been edited, we would need to fetch again
         public async Task<ActionResult<ScoresOnCurrentFrameOut>> NewScoreGet(string playerId) //return new total
         {
             throw new NotImplementedException();
@@ -90,11 +115,6 @@ namespace BowlingApi.Controllers
             throw new NotImplementedException();
         }
         
-        [HttpDelete("bulkPlayers")]
-        public async Task<ActionResult> DeleteList([FromBody]List<string> playerIds)
-        {
-            throw new NotImplementedException();
-        }
         
     }
 }

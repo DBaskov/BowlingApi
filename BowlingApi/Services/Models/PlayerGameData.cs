@@ -1,4 +1,4 @@
-﻿using BowlingApi.DTOs.HelperModels;
+﻿using BowlingApi.Services.Models.HelperModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +10,12 @@ namespace BowlingApi.Services.Models
     {
         public string PlayerId { get; set; }
 
-        public string MatchId { get; set; }
-
         public string PlayerName { get; set; } = "";
 
         public int TotalScore { get; set; } = 0;
 
-        public int CurrentFrame { get; set; }
-
         public List<int> RunningTotalList { get; set; } = new List<int>();
 
-        public List<List<int>> ResultList { get; set; } = new List<List<int>>();
+        public List<Frame> ResultList { get; set; } = new List<Frame>();
     }
 }
