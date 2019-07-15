@@ -76,180 +76,7 @@ namespace BowlingApi.BusinessLogicHelpers
             }
 
             return playersList;
-        }               
-
-        public Tuple<bool, int> FoundStrikeTwoShotsBackAndFrameNum(List<Frame> resultList, int curFrameNum, int curCellNum)
-        {
-            if (curFrameNum < 2)
-            {
-                return new Tuple<bool, int>(false, -1);
-            }
-
-            var frameNumResult = curFrameNum - 2; //zero indexed, frame before current
-            if (curCellNum == 1)
-            {
-                if(frameNumResult >= 0 && resultList[frameNumResult].IsStrike)
-                {
-                    frameNumResult--;
-                    if (frameNumResult >= 0 && resultList[frameNumResult].IsStrike)
-                    {
-                        return new Tuple<bool, int>(true, frameNumResult + 1);
-                    }
-                }               
-
-                return new Tuple<bool, int>(false, -1);
-            }
-            else
-            {
-                if (resultList[frameNumResult].IsStrike) // if 10 is in first cell, we have a strike [10][-1] [4], need to go back one more
-                {
-                    return new Tuple<bool, int>(true, frameNumResult + 1);
-                }
-                return new Tuple<bool, int>(false, -1);
-            }
-        }
-
-        public Tuple<bool, int> FoundSpareOneShotBackAndFrameNum(List<Frame> resultList, int curFrameNum, int curCellNum)
-        {
-            if (curFrameNum < 2)
-            {
-                return new Tuple<bool, int>(false, -1);
-            }
-
-            var frameNumResultIdx = curFrameNum - 1;
-            if (curCellNum == 1)
-            {
-                frameNumResultIdx -= 1;
-
-                return new Tuple<bool, int>(resultList[frameNumResultIdx].IsSpare, curFrameNum-1);
-            }
-            return new Tuple<bool, int>(resultList[frameNumResultIdx].IsSpare, curFrameNum); //do we need this?
-        }
-
-        public Tuple<int, int> GetScoreOneShotBackAndFrameNum(List<Frame> resultList, int curFrameNum, int curCellNum)
-        {
-            if (curFrameNum == 1 && curCellNum == 1)
-            {
-                return new Tuple<int, int>(0, -1);
-            }
-
-            var frameNumResultIdx = curFrameNum - 1;
-            if (curCellNum == 1)
-            {
-                frameNumResultIdx -= 1;
-                if(resultList[frameNumResultIdx].IsStrike) {
-                    return new Tuple<int, int>(10, frameNumResultIdx + 1);
-                }
-
-                return new Tuple<int, int>(resultList[frameNumResultIdx].ScoreCells[1], frameNumResultIdx + 1);
-            }
-            else
-            {
-                if (resultList[frameNumResultIdx].IsStrike)
-                {
-                    return new Tuple<int, int>(10, frameNumResultIdx + 1);
-                }
-                return new Tuple<int, int>(resultList[frameNumResultIdx].ScoreCells[0], frameNumResultIdx + 1);
-            }
-        }        
-
-        public void RecalculateRunningTotal(List<int> runningTotal, int newScore, int frameNum)
-        {
-            if(runningTotal.Count < 2)
-            {
-                return;
-            }
-            //todo additional logic to check if params are valid
-            var frameIdx = frameNum - 1;
-            var scoreDifference = newScore - runningTotal[frameIdx];
-            runningTotal[frameIdx] = newScore;            
-
-            for (var i = frameIdx+1; i < runningTotal.Count; i++)
-            {
-                runningTotal[i] += scoreDifference;
-            }
-        }
-
-        public bool HandleStrike(PlayerGameData playerScore, int frameNum, int cellNum, int numPins)
-        {
-            var resultList = playerScore.ResultList;
-            if (frameNum > 1)
-            {
-                var foundStrikeAndFrame = FoundStrikeTwoShotsBackAndFrameNum(resultList, frameNum, cellNum);
-
-                if (foundStrikeAndFrame.Item1)
-                {
-                    var shotBeforeResult = GetScoreOneShotBackAndFrameNum(resultList, frameNum, cellNum);                   
-
-                    var newScore = shotBeforeResult.Item1 + numPins + 10; //spares are handled
-
-                    RecalculateRunningTotal(playerScore.RunningTotalList, newScore, foundStrikeAndFrame.Item2);
-                    playerScore.TotalScore = playerScore.RunningTotalList[frameNum - 1];
-                    return true;
-                }
-            }
-            
-            return false;           
-        }
-
-        public bool HandleSpare(PlayerGameData playerScore, int frameNum, int cellNum, int numPins)
-        {
-            var resultList = playerScore.ResultList;
-            if (frameNum > 1)
-            {
-                var spareFoundResult = FoundSpareOneShotBackAndFrameNum(resultList, frameNum, cellNum);
-
-                if (spareFoundResult.Item1) //it's a spare
-                {
-                    var spareFrameNewScore = playerScore.RunningTotalList[spareFoundResult.Item2 - 1] + numPins; //expect strikes and spare to have score of 10
-                    RecalculateRunningTotal(playerScore.RunningTotalList, spareFrameNewScore, spareFoundResult.Item2);
-                    playerScore.TotalScore = playerScore.RunningTotalList[frameNum - 1];
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool HandleStrikesAndSpares(PlayerGameData playerScore, int frameNum, int cellNum, int numPins)
-        {
-
-            return HandleStrike(playerScore, frameNum, cellNum, numPins) 
-                || HandleSpare(playerScore, frameNum, cellNum, numPins); //when going back if you already got spare and count another one
-        }
-
-        public void UpdateFrameScore(List<Frame> resultList, int frameNum, int cellNum, int numPins)
-        {
-            Frame frame = null;
-            if (cellNum == 1 || cellNum == 1 && numPins == 10 ) { //watch out for spares
-                frame = new Frame() { ScoreCells = new List<int>() { numPins } };                
-            }
-            else
-            {
-                frame = resultList[frameNum - 1];
-            }
-
-            if (numPins == 10 && cellNum == 1)
-            {
-                frame.IsStrike = true;
-            }
-
-            var oneShotBackResult = GetScoreOneShotBackAndFrameNum(resultList, frameNum, cellNum);
-            if (numPins + oneShotBackResult.Item1 == 10)
-            {
-                frame.IsSpare = true;
-            }
-
-            if (cellNum == 2)
-            {
-                frame.ScoreCells.Add(numPins);
-            }
-            else //add new frame
-            {
-                resultList.Add(frame);
-            }
-            
-        } 
+        }                             
 
         public async Task<PlayerGameData> UpdateScore(Guid playerId, int numPins)
         {
@@ -294,6 +121,40 @@ namespace BowlingApi.BusinessLogicHelpers
             return score; 
         }
 
+        public void UpdateFrameScore(List<Frame> resultList, int frameNum, int cellNum, int numPins)
+        {
+            Frame frame = null;
+            if (cellNum == 1 || cellNum == 1 && numPins == 10)
+            { //watch out for spares
+                frame = new Frame() { ScoreCells = new List<int>() { numPins } };
+            }
+            else
+            {
+                frame = resultList[frameNum - 1];
+            }
+
+            if (numPins == 10 && cellNum == 1)
+            {
+                frame.IsStrike = true;
+            }
+
+            var oneShotBackResult = GetScoreOneShotBackAndFrameNum(resultList, frameNum, cellNum);
+            if (numPins + oneShotBackResult.Item1 == 10)
+            {
+                frame.IsSpare = true;
+            }
+
+            if (cellNum == 2)
+            {
+                frame.ScoreCells.Add(numPins);
+            }
+            else //add new frame
+            {
+                resultList.Add(frame);
+            }
+
+        }
+
         public async Task<PlayerGameData> GetPlayerGameData(Guid playerId)
         {
 
@@ -320,6 +181,147 @@ namespace BowlingApi.BusinessLogicHelpers
             }
 
             return success;
+        }
+
+        public Tuple<bool, int> FoundStrikeTwoShotsBackAndFrameNum(List<Frame> resultList, int curFrameNum, int curCellNum)
+        {
+            if (curFrameNum < 2)
+            {
+                return new Tuple<bool, int>(false, -1);
+            }
+
+            var frameNumResult = curFrameNum - 2; //zero indexed, frame before current
+            if (curCellNum == 1)
+            {
+                if (frameNumResult >= 0 && resultList[frameNumResult].IsStrike)
+                {
+                    frameNumResult--;
+                    if (frameNumResult >= 0 && resultList[frameNumResult].IsStrike)
+                    {
+                        return new Tuple<bool, int>(true, frameNumResult + 1);
+                    }
+                }
+
+                return new Tuple<bool, int>(false, -1);
+            }
+            else
+            {
+                if (resultList[frameNumResult].IsStrike) // if 10 is in first cell, we have a strike [10][-1] [4], need to go back one more
+                {
+                    return new Tuple<bool, int>(true, frameNumResult + 1);
+                }
+                return new Tuple<bool, int>(false, -1);
+            }
+        }
+
+        public Tuple<bool, int> FoundSpareOneShotBackAndFrameNum(List<Frame> resultList, int curFrameNum, int curCellNum)
+        {
+            if (curFrameNum < 2)
+            {
+                return new Tuple<bool, int>(false, -1);
+            }
+
+            var frameNumResultIdx = curFrameNum - 1;
+            if (curCellNum == 1)
+            {
+                frameNumResultIdx -= 1;
+
+                return new Tuple<bool, int>(resultList[frameNumResultIdx].IsSpare, curFrameNum - 1);
+            }
+            return new Tuple<bool, int>(resultList[frameNumResultIdx].IsSpare, curFrameNum); //do we need this?
+        }
+
+        public Tuple<int, int> GetScoreOneShotBackAndFrameNum(List<Frame> resultList, int curFrameNum, int curCellNum)
+        {
+            if (curFrameNum == 1 && curCellNum == 1)
+            {
+                return new Tuple<int, int>(0, -1);
+            }
+
+            var frameNumResultIdx = curFrameNum - 1;
+            if (curCellNum == 1)
+            {
+                frameNumResultIdx -= 1;
+                if (resultList[frameNumResultIdx].IsStrike)
+                {
+                    return new Tuple<int, int>(10, frameNumResultIdx + 1);
+                }
+
+                return new Tuple<int, int>(resultList[frameNumResultIdx].ScoreCells[1], frameNumResultIdx + 1);
+            }
+            else
+            {
+                if (resultList[frameNumResultIdx].IsStrike)
+                {
+                    return new Tuple<int, int>(10, frameNumResultIdx + 1);
+                }
+                return new Tuple<int, int>(resultList[frameNumResultIdx].ScoreCells[0], frameNumResultIdx + 1);
+            }
+        }
+
+        public void RecalculateRunningTotal(List<int> runningTotal, int newScore, int frameNum)
+        {
+            if (runningTotal.Count < 2)
+            {
+                return;
+            }
+            //todo additional logic to check if params are valid
+            var frameIdx = frameNum - 1;
+            var scoreDifference = newScore - runningTotal[frameIdx];
+            runningTotal[frameIdx] = newScore;
+
+            for (var i = frameIdx + 1; i < runningTotal.Count; i++)
+            {
+                runningTotal[i] += scoreDifference;
+            }
+        }
+
+        public bool HandleStrike(PlayerGameData playerScore, int frameNum, int cellNum, int numPins)
+        {
+            var resultList = playerScore.ResultList;
+            if (frameNum > 1)
+            {
+                var foundStrikeAndFrame = FoundStrikeTwoShotsBackAndFrameNum(resultList, frameNum, cellNum);
+
+                if (foundStrikeAndFrame.Item1)
+                {
+                    var shotBeforeResult = GetScoreOneShotBackAndFrameNum(resultList, frameNum, cellNum);
+
+                    var newScore = shotBeforeResult.Item1 + numPins + 10; //spares are handled
+
+                    RecalculateRunningTotal(playerScore.RunningTotalList, newScore, foundStrikeAndFrame.Item2);
+                    playerScore.TotalScore = playerScore.RunningTotalList[frameNum - 1];
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool HandleSpare(PlayerGameData playerScore, int frameNum, int cellNum, int numPins)
+        {
+            var resultList = playerScore.ResultList;
+            if (frameNum > 1)
+            {
+                var spareFoundResult = FoundSpareOneShotBackAndFrameNum(resultList, frameNum, cellNum);
+
+                if (spareFoundResult.Item1) //it's a spare
+                {
+                    var spareFrameNewScore = playerScore.RunningTotalList[spareFoundResult.Item2 - 1] + numPins; //expect strikes and spare to have score of 10
+                    RecalculateRunningTotal(playerScore.RunningTotalList, spareFrameNewScore, spareFoundResult.Item2);
+                    playerScore.TotalScore = playerScore.RunningTotalList[frameNum - 1];
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool HandleStrikesAndSpares(PlayerGameData playerScore, int frameNum, int cellNum, int numPins)
+        {
+
+            return HandleStrike(playerScore, frameNum, cellNum, numPins)
+                || HandleSpare(playerScore, frameNum, cellNum, numPins); //when going back if you already got spare and count another one
         }
     }
 }
