@@ -98,9 +98,10 @@ namespace BowlingApi.BusinessLogicHelpers
                 if (cellNum > 0) //optimize this later
                 {
 
-                    if (cellNum == 1 && !frame.IsStrike) //also logic for 10
+                    if (cellNum == 1 && !frame.IsStrike || score.ResultList.Count == 10) //also logic for 10
                     {
-                        cellNum = 2;
+                        cellNum += 1;
+                        
                         score.RunningTotalList[score.ResultList.Count - 1] = score.TotalScore;
                         UpdateFrameScore(score.ResultList, score.ResultList.Count, cellNum, numPins);
                     }
@@ -121,10 +122,15 @@ namespace BowlingApi.BusinessLogicHelpers
             return score; 
         }
 
+        public void UpdateBonusFrame(Frame bonusFrame, int cellNum, int numPins)
+        {
+
+        }
+
         public void UpdateFrameScore(List<Frame> resultList, int frameNum, int cellNum, int numPins)
         {
             Frame frame = null;
-            if (cellNum == 1 || cellNum == 1 && numPins == 10)
+            if (cellNum == 1)
             { //watch out for spares
                 frame = new Frame() { ScoreCells = new List<int>() { numPins } };
             }
@@ -133,9 +139,12 @@ namespace BowlingApi.BusinessLogicHelpers
                 frame = resultList[frameNum - 1];
             }
 
-            if (numPins == 10 && cellNum == 1)
+            if (numPins == 10)
             {
-                frame.IsStrike = true;
+                if (cellNum == 1 || frameNum == 10)
+                {
+                    frame.IsStrike = true;
+                }
             }
 
             var oneShotBackResult = GetScoreOneShotBackAndFrameNum(resultList, frameNum, cellNum);
@@ -144,7 +153,7 @@ namespace BowlingApi.BusinessLogicHelpers
                 frame.IsSpare = true;
             }
 
-            if (cellNum == 2)
+            if (cellNum >= 2)
             {
                 frame.ScoreCells.Add(numPins);
             }
@@ -228,6 +237,18 @@ namespace BowlingApi.BusinessLogicHelpers
 
                 return new Tuple<bool, int>(resultList[frameNumResultIdx].IsSpare, curFrameNum - 1);
             }
+            else if(curFrameNum == 10) //handle bonus frame
+            {
+                if(curFrameNum == 2)
+                {
+                    return new Tuple<bool, int>(false, curFrameNum);
+                }
+                else if(resultList[frameNumResultIdx].ScoreCells[0] + resultList[frameNumResultIdx].ScoreCells[1] == 10) //curFrameNum == 3
+                {
+                    return new Tuple<bool, int>(true, curFrameNum);
+                }
+            }
+
             return new Tuple<bool, int>(resultList[frameNumResultIdx].IsSpare, curFrameNum); //do we need this?
         }
 
@@ -251,10 +272,22 @@ namespace BowlingApi.BusinessLogicHelpers
             }
             else
             {
-                if (resultList[frameNumResultIdx].IsStrike)
+                if(curFrameNum == 10)
                 {
-                    return new Tuple<int, int>(10, frameNumResultIdx + 1);
+                    if (curCellNum == 1 || curCellNum == 2)
+                    {
+                        frameNumResultIdx -= 1;
+                        if (resultList[frameNumResultIdx].IsStrike)
+                        {
+                            return new Tuple<int, int>(10, frameNumResultIdx + 1);
+                        }
+                    }
+                    else
+                    {
+                        return new Tuple<int, int>(resultList[frameNumResultIdx].ScoreCells[1], frameNumResultIdx + 1);
+                    }
                 }
+                
                 return new Tuple<int, int>(resultList[frameNumResultIdx].ScoreCells[0], frameNumResultIdx + 1);
             }
         }
