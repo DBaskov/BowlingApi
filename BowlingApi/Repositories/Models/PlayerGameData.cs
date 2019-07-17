@@ -20,5 +20,6 @@ namespace BowlingApi.Repositories.Models
         public List<int> RunningTotalList { get; set; } = new List<int>();
 
         public List<Frame> ResultList { get; set; } = new List<Frame>();
+   
     }
 }

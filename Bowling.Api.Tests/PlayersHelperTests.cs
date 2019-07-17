@@ -54,27 +54,7 @@ namespace Bowling.Api.Tests
 
             Assert.AreEqual(result.TotalScore, numPins);
             Assert.AreEqual(result.ResultList[0].ScoreCells[0], numPins);
-        }
-
-        private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<int> frame)
-        {
-            return new PlayerGameData
-            {
-                TotalScore = totalScore,
-                RunningTotalList = runningTotal,
-                ResultList = new List<Frame>() { new Frame { ScoreCells = frame } }
-            };
-        }
-
-        private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<Frame> frames)
-        {
-            return new PlayerGameData
-            {
-                TotalScore = totalScore,
-                RunningTotalList = runningTotal,
-                ResultList = frames
-            };
-        }
+        }        
 
         [TestMethod]
         public async Task UpdateScoreSecondValueTest()
@@ -219,7 +199,6 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(oldPlayerScore.RunningTotalList[0], result.RunningTotalList[0]);
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(numPins, result.ResultList[0].ScoreCells[1]);
-            Assert.IsTrue(result.ResultList[0].IsSpare);
         }
          
         [TestMethod]
@@ -233,7 +212,6 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);            
 
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
-            playerScore.ResultList[0].IsSpare = true;
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
@@ -247,7 +225,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.RunningTotalList[0] + numPins, result.RunningTotalList[1]);
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[1], result.ResultList[0].ScoreCells[1]);
-            Assert.IsTrue(result.ResultList[0].IsSpare);
+
             Assert.AreEqual(numPins, result.ResultList[1].ScoreCells[0]);
         }
 
@@ -261,7 +239,6 @@ namespace Bowling.Api.Tests
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
-            playerScore.ResultList[0].IsSpare = true;
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
@@ -276,7 +253,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.ResultList[0].ScoreCells[0], oldPlayerScore.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(result.ResultList[0].ScoreCells[1], oldPlayerScore.ResultList[0].ScoreCells[1]);
             Assert.AreEqual(result.ResultList[1].ScoreCells[0], numPins);
-            Assert.IsTrue(result.ResultList[0].IsSpare);
+
         }
 
         [TestMethod]
@@ -313,7 +290,7 @@ namespace Bowling.Api.Tests
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
-            playerScore.ResultList[0].IsSpare = true;
+  
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
@@ -328,7 +305,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.ResultList[0].ScoreCells[0], oldPlayerScore.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(result.ResultList[0].ScoreCells[1], oldPlayerScore.ResultList[0].ScoreCells[1]);
             Assert.AreEqual(result.ResultList[1].ScoreCells[0], numPins);
-            Assert.IsTrue(result.ResultList[0].IsSpare);
+
         }
         
         [TestMethod]
@@ -346,7 +323,6 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.TotalScore, 10);
             Assert.AreEqual(result.RunningTotalList[0], 10);
             Assert.AreEqual(result.ResultList[0].ScoreCells[0], 10);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
         }
 
         [TestMethod]
@@ -359,7 +335,7 @@ namespace Bowling.Api.Tests
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
-            playerScore.ResultList[0].IsStrike = true;
+            ;
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
@@ -373,7 +349,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.RunningTotalList[1], 14);
             Assert.AreEqual(result.ResultList[0].ScoreCells[0], oldPlayerScore.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(result.ResultList[1].ScoreCells[0], numPins);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
+            
         }
 
         [TestMethod]
@@ -383,7 +359,7 @@ namespace Bowling.Api.Tests
             var oldTotalScore = 14;
             var oldRunningTotalList = new List<int> { 10, 14 };
             var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }, IsStrike = true },
+                new Frame { ScoreCells = new List<int>() { 10 } },
                 new Frame {ScoreCells = new List<int>() { 4 } }
             };
 
@@ -403,7 +379,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.ResultList[0].ScoreCells[0], oldPlayerScore.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(result.ResultList[1].ScoreCells[0], oldPlayerScore.ResultList[1].ScoreCells[0]);
             Assert.AreEqual(result.ResultList[1].ScoreCells[1], numPins);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
+            
         }
 
         [TestMethod]
@@ -413,7 +389,7 @@ namespace Bowling.Api.Tests
             var oldTotalScore = 28;
             var oldRunningTotalList = new List<int> { 19, 28 };           
             var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }, IsStrike = true },
+                new Frame { ScoreCells = new List<int>() { 10 } },
                 new Frame {ScoreCells = new List<int>() { 4, 5 } }
             };
 
@@ -435,7 +411,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.ResultList[1].ScoreCells[0], oldPlayerScore.ResultList[1].ScoreCells[0]);
             Assert.AreEqual(result.ResultList[1].ScoreCells[1], oldPlayerScore.ResultList[1].ScoreCells[1]);
             Assert.AreEqual(result.ResultList[2].ScoreCells[0], numPins);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
+            
         }
 
         [TestMethod] //failing because logic is going off from new -1 created not the 10
@@ -452,7 +428,7 @@ namespace Bowling.Api.Tests
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
-            playerScore.ResultList[0].IsStrike = true;
+            ;
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
@@ -466,8 +442,8 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(20, result.RunningTotalList[1]);
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(10, result.ResultList[1].ScoreCells[0]);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
-            Assert.IsTrue(result.ResultList[1].IsStrike);
+            
+            
         }
         
         [TestMethod]
@@ -483,7 +459,7 @@ namespace Bowling.Api.Tests
             var oldTotalScore = 14;
             var oldRunningTotalList = new List<int> { 10, 14 };            
             var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }, IsStrike = true },
+                new Frame { ScoreCells = new List<int>() { 10 } },
                 new Frame {ScoreCells = new List<int>() { 4 } }
             };
 
@@ -503,7 +479,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
             Assert.AreEqual(6, result.ResultList[1].ScoreCells[1]);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
+            
         }
         
         [TestMethod]
@@ -513,8 +489,8 @@ namespace Bowling.Api.Tests
             var oldTotalScore = 30;
             var oldRunningTotalList = new List<int> { 20, 30 };            
             var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }, IsStrike = true },
-                new Frame {ScoreCells = new List<int>() { 4, 6 }, IsSpare = true }
+                new Frame { ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 4, 6 } }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -535,7 +511,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
             Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[1], result.ResultList[1].ScoreCells[1]);
             Assert.AreEqual(numPins, result.ResultList[2].ScoreCells[0]);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
+            
         }
 
         [TestMethod]
@@ -545,8 +521,8 @@ namespace Bowling.Api.Tests
             var oldTotalScore = 20;
             var oldRunningTotalList = new List<int> { 10, 20 };            
             var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }, IsStrike = true },
-                new Frame {ScoreCells = new List<int>() { 10 }, IsStrike = true }
+                new Frame { ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 10 } }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -566,8 +542,8 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
             Assert.AreEqual(numPins, result.ResultList[2].ScoreCells[0]);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
-            Assert.IsTrue(result.ResultList[1].IsStrike);
+            
+            
         }
 
         [TestMethod]
@@ -578,7 +554,7 @@ namespace Bowling.Api.Tests
             var oldRunningTotalList = new List<int> { 10, 10 };
             
             var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }, IsStrike = true },
+                new Frame { ScoreCells = new List<int>() { 10 } },
                 new Frame {ScoreCells = new List<int>() { 0 } }
             };
 
@@ -598,7 +574,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
             Assert.AreEqual(numPins, result.ResultList[1].ScoreCells[1]);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
+            
         }
         
         [TestMethod]
@@ -609,7 +585,7 @@ namespace Bowling.Api.Tests
             var oldRunningTotalList = new List<int> { 10, 14 };
            
             var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }, IsStrike = true  },
+                new Frame { ScoreCells = new List<int>() { 10 }  },
                 new Frame {ScoreCells = new List<int>() { 4 } }
             };
 
@@ -629,7 +605,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
             Assert.AreEqual(0, result.ResultList[1].ScoreCells[1]);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
+            
         }
 
         [TestMethod]
@@ -639,7 +615,7 @@ namespace Bowling.Api.Tests
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10, 10 };            
             var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }, IsStrike = true },
+                new Frame { ScoreCells = new List<int>() { 10 } },
                 new Frame {ScoreCells = new List<int>() { 0 } }
             };
 
@@ -659,7 +635,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
             Assert.AreEqual(0, result.ResultList[1].ScoreCells[1]);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
+            
         }
 
         [TestMethod]
@@ -669,7 +645,7 @@ namespace Bowling.Api.Tests
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10, 10 };            
             var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }, IsStrike = true },
+                new Frame { ScoreCells = new List<int>() { 10 } },
                 new Frame {ScoreCells = new List<int>() { 0 } }
             };
 
@@ -689,20 +665,48 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
             Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
             Assert.AreEqual(10, result.ResultList[1].ScoreCells[1]);
-            Assert.IsTrue(result.ResultList[0].IsStrike);
-            Assert.IsTrue(result.ResultList[1].IsSpare);
+            
         }
 
         [TestMethod]
-        public async Task UpdateScoreNextFrame()
+        public async Task UpdateScoreBonusFrameOneShotTest()
         {
+            var playerScore = AllNonBonusFramesFilled();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 5;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(142, result.TotalScore);
+            Assert.AreEqual(142, result.RunningTotalList[9]);
+            Assert.AreEqual(137, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[0]);
         }
 
         [TestMethod]
         public async Task UpdateScoreSecondShotInBonusFrameTest()
         {
+            var playerScore = AllNonBonusFramesFilled();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 5 } });
+            playerScore.TotalScore += 5;
+            playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 5);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 3;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(145, result.TotalScore);
+            Assert.AreEqual(145, result.RunningTotalList[9]);
+            Assert.AreEqual(137, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(5, result.ResultList[9].ScoreCells[0]);
         }
 
         [TestMethod]
@@ -714,55 +718,359 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreTripleStrikeBonusFrameTest()
         {
+            var playerScore = AllNonBonusFramesFilled();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10, 10 } });
+            playerScore.TotalScore += 20;
+            playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10 + 10);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 10;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(167, result.TotalScore);
+            Assert.AreEqual(167, result.RunningTotalList[9]);
+            Assert.AreEqual(137, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
+            Assert.AreEqual(10, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
+        }
+
+        [TestMethod]
+        public async Task UpdateScoreDoubleStrikeBonusFrameStrikeFrameBeforeTest()
+        {
         }
 
         [TestMethod]
         public async Task UpdateScoreDoubleMissBonusFrameTest()
         {
+            var playerScore = AllNonBonusFramesFilled();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 0 } });
+            playerScore.TotalScore += 0;
+            playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8]);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 0;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(137, result.TotalScore);
+            Assert.AreEqual(137, result.RunningTotalList[9]);
+            Assert.AreEqual(137, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(0, result.ResultList[9].ScoreCells[0]);
         }
 
         [TestMethod]
         public async Task UpdateScoreStrikeSpareBonusFrame()
         {
+            var playerScore = AllNonBonusFramesFilled();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10, 4 } });
+            playerScore.TotalScore += 14;
+            playerScore.RunningTotalList.Add(playerScore.TotalScore);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 6;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(157, result.TotalScore);
+            Assert.AreEqual(157, result.RunningTotalList[9]);
+            Assert.AreEqual(137, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
+            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(4, result.ResultList[9].ScoreCells[1]);
         }
 
         [TestMethod]
         public async Task UpdateScoreSpareStrikeBonusFrame()
         {
+            var playerScore = AllNonBonusFramesFilled();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 4, 6 } });
+            playerScore.TotalScore += 10;
+            playerScore.RunningTotalList.Add(playerScore.TotalScore);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 10;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(157, result.TotalScore);
+            Assert.AreEqual(157, result.RunningTotalList[9]);
+            Assert.AreEqual(137, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
+            Assert.AreEqual(4, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(6, result.ResultList[9].ScoreCells[1]);
         }
 
         [TestMethod]
         public async Task UpdateScoreSpareRegularShotBonus()
         {
+            var playerScore = AllNonBonusFramesFilled();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 4, 6 } });
+            playerScore.TotalScore += 10;
+            playerScore.RunningTotalList.Add(playerScore.TotalScore);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 5;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(152, result.TotalScore);
+            Assert.AreEqual(152, result.RunningTotalList[9]);
+            Assert.AreEqual(137, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
+            Assert.AreEqual(4, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(6, result.ResultList[9].ScoreCells[1]);
         }
 
         [TestMethod]
         public async Task UpdateScoreStrikeStrikeRegularBonusFrame()
         {
+            var playerScore = AllNonBonusFramesFilled();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10, 10 } });
+            playerScore.TotalScore += 20;
+            playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10 + 10);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 5;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(162, result.TotalScore);
+            Assert.AreEqual(162, result.RunningTotalList[9]);
+            Assert.AreEqual(137, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
+            Assert.AreEqual(10, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
+        }
+
+        [TestMethod]
+        public async Task UpdateScoreStrikeBeforeTwoStrikesInBonusFrame()
+        {
+
+            var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10 } });
+            playerScore.TotalScore += 10;
+            playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 10;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(180, result.TotalScore);
+            Assert.AreEqual(180, result.RunningTotalList[9]);
+            Assert.AreEqual(160, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
+        }
+
+        [TestMethod]
+        public async Task UpdateScoreStrikeBeforeThreeStrikesInBonusFrame()
+        {
+
+            var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10, 10 } });
+            playerScore.TotalScore = 180; //20 for strike in frame before bonus and another for 2 20s
+            playerScore.RunningTotalList[8] = 160;
+            playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 10;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(190, result.TotalScore);
+            Assert.AreEqual(190, result.RunningTotalList[9]);
+            Assert.AreEqual(160, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
+            Assert.AreEqual(10, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
+        }
+
+        [TestMethod]
+        public async Task UpdateScoreStrikeBeforeSpareInBonusFrame()
+        {
+
+            var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 4 } });
+            playerScore.TotalScore += 4;
+            playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 4);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 6;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(160, result.TotalScore);
+            Assert.AreEqual(160, result.RunningTotalList[9]);
+            Assert.AreEqual(150, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(4, result.ResultList[9].ScoreCells[0]);
+        }
+
+        [TestMethod]
+        public async Task UpdateScoreStrikeBeforeTwoRegularShotsInBonusFrame()
+        {
+
+            var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 4 } });
+            playerScore.TotalScore += 4;
+            playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 4);
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 4;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(156, result.TotalScore);
+            Assert.AreEqual(156, result.RunningTotalList[9]);
+            Assert.AreEqual(148, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(4, result.ResultList[9].ScoreCells[0]);
+        }
+
+        [TestMethod]
+        public async Task UpdateScoreTwoStrikesBeforeOneStrikeInBonusFrame()
+        {
+
+            var playerScore = AllNonBonusFramesFilledTwoStrikesAtEnd();
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 10;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(184, result.TotalScore);
+            Assert.AreEqual(184, result.RunningTotalList[9]);
+            Assert.AreEqual(174, result.RunningTotalList[8]);
+            Assert.AreEqual(164, result.RunningTotalList[7]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[0]);
+        }
+
+        [TestMethod]
+        public async Task UpdateScoreSpareBeforeStrikeInBonusFrame()
+        {
+
+            var playerScore = AllNonBonusFramesFilledSpareAtEnd();
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 10;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(160, result.TotalScore);
+            Assert.AreEqual(160, result.RunningTotalList[9]);
+            Assert.AreEqual(150, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[0]);
+        }
+
+        [TestMethod]
+        public async Task UpdateScoreSpareBeforeRegularShotInBonusFrame()
+        {
+
+            var playerScore = AllNonBonusFramesFilledSpareAtEnd();
+
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 4;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(148, result.TotalScore);
+            Assert.AreEqual(148, result.RunningTotalList[9]);
+            Assert.AreEqual(144, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[0]);
         }
 
         [TestMethod]
         public async Task UpdateScoreAllMissTest()
         {
+            var playerScore = GetFramesFilledExceptOneAllZeroes();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 0;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(0, result.TotalScore);
+            Assert.AreEqual(0, result.RunningTotalList[9]);
+            Assert.AreEqual(0, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
         }
 
         [TestMethod]
         public async Task UpdateScoreAllStrikesTest()
         {
+            var playerScore = GetFramesFilledExceptOneAllStrikes();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 10;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(300, result.TotalScore);
+            Assert.AreEqual(300, result.RunningTotalList[9]);
+            Assert.AreEqual(270, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
         }
 
         [TestMethod]
         public async Task UpdateScoreAllSparesTest()
         {
+            var playerScore = GetFramesFilledExceptOneAllSpares();
 
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+
+            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var numPins = 4;
+            var result = await helper.UpdateScore(PLAYER_ID, numPins);
+
+            Assert.AreEqual(116, result.TotalScore);
+            Assert.AreEqual(116, result.RunningTotalList[9]);
+            Assert.AreEqual(102, result.RunningTotalList[8]);
+            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
         }
         
 
@@ -823,8 +1131,7 @@ namespace Bowling.Api.Tests
 
             var resultList = new List<Frame>() {
                 new Frame {
-                    ScoreCells = new List<int>() { 5, 5 },
-                    IsSpare = true
+                    ScoreCells = new List<int>() { 5, 5 }
                 }
             };
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 1);
@@ -843,8 +1150,7 @@ namespace Bowling.Api.Tests
                     ScoreCells = new List<int>() { 2, 4 }
                 },
                 new Frame {
-                    ScoreCells = new List<int>() { 5, 5 },
-                    IsSpare = true
+                    ScoreCells = new List<int>() { 5, 5 }
                 }
             };
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 2, 2);
@@ -860,8 +1166,7 @@ namespace Bowling.Api.Tests
             //var resultList = new List<List<int>>() { new List<int>() { 10, -1 } };
             var resultList = new List<Frame>() {
                 new Frame {
-                    ScoreCells = new List<int>() { 10 },
-                    IsStrike = true
+                    ScoreCells = new List<int>() { 10 }
                 }               
             };
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 1);
@@ -879,8 +1184,7 @@ namespace Bowling.Api.Tests
                     ScoreCells = new List<int>() { 2, 4 }
                 },
                 new Frame {
-                    ScoreCells = new List<int>() { 10 },
-                    IsStrike = true
+                    ScoreCells = new List<int>() { 10 }
                 }
             };
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 2, 1);
@@ -967,8 +1271,7 @@ namespace Bowling.Api.Tests
         {
             var resultList = new List<Frame>() {
                 new Frame {
-                    ScoreCells = new List<int>() { 4, 6 },
-                    IsSpare = true
+                    ScoreCells = new List<int>() { 4, 6 }
                 },
                 new Frame {
                     ScoreCells = new List<int>() { 5 }
@@ -988,8 +1291,7 @@ namespace Bowling.Api.Tests
 
             var resultList = new List<Frame>() {
                 new Frame {
-                    ScoreCells = new List<int>() { 10 },
-                    IsStrike = true
+                    ScoreCells = new List<int>() { 10 }
                 },
                 new Frame {
                     ScoreCells = new List<int>() { 5 }
@@ -1009,8 +1311,7 @@ namespace Bowling.Api.Tests
 
             var resultList = new List<Frame>() {
                 new Frame {
-                    ScoreCells = new List<int>() { 10 },
-                    IsStrike = true
+                    ScoreCells = new List<int>() { 10 }
                 },
                 new Frame {
                     ScoreCells = new List<int>() { 5 }
@@ -1030,12 +1331,10 @@ namespace Bowling.Api.Tests
 
             var resultList = new List<Frame>() {
                 new Frame {
-                    ScoreCells = new List<int>() { 10 },
-                    IsStrike = true
+                    ScoreCells = new List<int>() { 10 }
                 },
                 new Frame {
-                    ScoreCells = new List<int>() { 10 },
-                    IsStrike = true
+                    ScoreCells = new List<int>() { 10 }
                 },
                 new Frame {
                     ScoreCells = new List<int>() { 5 }
@@ -1055,12 +1354,10 @@ namespace Bowling.Api.Tests
 
             var resultList = new List<Frame>() {
                 new Frame {
-                    ScoreCells = new List<int>() { 4, 6 },
-                    IsSpare = true
+                    ScoreCells = new List<int>() { 4, 6 }
                 },
                 new Frame {
-                    ScoreCells = new List<int>() { 10 },
-                    IsStrike = true
+                    ScoreCells = new List<int>() { 10 }
                 },
                 new Frame {
                     ScoreCells = new List<int>() { 5 }
@@ -1080,8 +1377,7 @@ namespace Bowling.Api.Tests
 
             var resultList = new List<Frame>() {
                 new Frame {
-                    ScoreCells = new List<int>() { 10 },
-                    IsSpare = true
+                    ScoreCells = new List<int>() { 10 }
                 },
                 new Frame {
                     ScoreCells = new List<int>() { 4, 5 }
@@ -1097,5 +1393,181 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(-1, result.Item2);
         }
         //bonus frame tests
+        private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<int> frame)
+        {
+            return new PlayerGameData
+            {
+                TotalScore = totalScore,
+                RunningTotalList = runningTotal,
+                ResultList = new List<Frame>() { new Frame { ScoreCells = frame } }
+            };
+        }
+
+        private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<Frame> frames)
+        {
+            return new PlayerGameData
+            {
+                TotalScore = totalScore,
+                RunningTotalList = runningTotal,
+                ResultList = frames
+            };
+        }
+
+        private static PlayerGameData AllNonBonusFramesFilled()
+        {
+            var frames = new List<Frame>() {
+                new Frame { ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 0, 10 } },
+                new Frame {ScoreCells = new List<int>() { 5, 4 } },
+                new Frame {ScoreCells = new List<int>() { 3, 7 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 1, 9 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 4, 4 } },
+                new Frame {ScoreCells = new List<int>() { 2, 5 } }
+            };
+
+            return new PlayerGameData
+            {
+                TotalScore = 137,
+                RunningTotalList = new List<int> { 20, 35, 44, 64, 84, 104, 122, 130, 137 },
+                ResultList = frames
+            };
+        }
+
+        private static PlayerGameData AllNonBonusFramesFilledStrikeAtEnd()
+        {
+            var frames = new List<Frame>() {
+                new Frame { ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 0, 10 } },
+                new Frame {ScoreCells = new List<int>() { 5, 4 } },
+                new Frame {ScoreCells = new List<int>() { 3, 7 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 1, 9 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 4, 4 } },
+                new Frame {ScoreCells = new List<int>() { 10 } }
+            };
+
+            return new PlayerGameData
+            {
+                TotalScore = 140,
+                RunningTotalList = new List<int> { 20, 35, 44, 64, 84, 104, 122, 130, 140 },
+                ResultList = frames
+            };
+        }
+
+        private static PlayerGameData AllNonBonusFramesFilledTwoStrikesAtEnd()
+        {
+            var frames = new List<Frame>() {
+                new Frame { ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 0, 10 } },
+                new Frame {ScoreCells = new List<int>() { 5, 4 } },
+                new Frame {ScoreCells = new List<int>() { 3, 7 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 1, 9 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 10 } }
+            };
+
+            return new PlayerGameData
+            {
+                TotalScore = 154,
+                RunningTotalList = new List<int> { 20, 35, 44, 64, 84, 104, 134, 144, 154 },
+                ResultList = frames
+            };
+        }
+
+        private static PlayerGameData AllNonBonusFramesFilledSpareAtEnd()
+        {
+            var frames = new List<Frame>() {
+                new Frame { ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 0, 10 } },
+                new Frame {ScoreCells = new List<int>() { 5, 4 } },
+                new Frame {ScoreCells = new List<int>() { 3, 7 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 1, 9 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 4, 4 } },
+                new Frame {ScoreCells = new List<int>() { 4, 6 } }
+            };
+
+            return new PlayerGameData
+            {
+                TotalScore = 140,
+                RunningTotalList = new List<int> { 20, 35, 44, 64, 84, 104, 122, 130, 140 },
+                ResultList = frames
+            };
+        }
+
+        private static PlayerGameData GetFramesFilledExceptOneAllZeroes()
+        {
+            var frames = new List<Frame>() {
+                new Frame { ScoreCells = new List<int>() { 0, 0 } },
+                new Frame {ScoreCells = new List<int>() { 0, 0 } },
+                new Frame {ScoreCells = new List<int>() { 0, 0  } },
+                new Frame {ScoreCells = new List<int>() { 0, 0  } },
+                new Frame {ScoreCells = new List<int>() { 0, 0 } },
+                new Frame {ScoreCells = new List<int>() { 0, 0  } },
+                new Frame {ScoreCells = new List<int>() { 0, 0 } },
+                new Frame {ScoreCells = new List<int>() { 0, 0  } },
+                new Frame {ScoreCells = new List<int>() { 0, 0 } },
+                new Frame {ScoreCells = new List<int>() { 0, 0 } }
+            };
+
+            return new PlayerGameData
+            {
+                TotalScore = 0,
+                RunningTotalList = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                ResultList = frames
+            };
+        }
+
+        private static PlayerGameData GetFramesFilledExceptOneAllSpares()
+        {
+            var frames = new List<Frame>() {
+                new Frame { ScoreCells = new List<int>() { 4, 6 } },
+                new Frame {ScoreCells = new List<int>() { 3, 7 } },
+                new Frame {ScoreCells = new List<int>() { 1, 9  } },
+                new Frame {ScoreCells = new List<int>() { 0, 10  } },
+                new Frame {ScoreCells = new List<int>() { 3, 7  } },
+                new Frame {ScoreCells = new List<int>() { 1, 9   } },
+                new Frame {ScoreCells = new List<int>() { 0, 10 } },
+                new Frame {ScoreCells = new List<int>() { 3, 7   } },
+                new Frame {ScoreCells = new List<int>() { 1, 9  } },
+                new Frame {ScoreCells = new List<int>() { 0, 10 } }
+            };
+
+            return new PlayerGameData
+            {
+                TotalScore = 112,
+                RunningTotalList = new List<int> { 13, 24, 34, 47, 58, 68, 81, 92, 102, 112 },
+                ResultList = frames
+            };
+        }
+
+        private static PlayerGameData GetFramesFilledExceptOneAllStrikes()
+        {
+            var frames = new List<Frame>() {
+                new Frame { ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 10  } },
+                new Frame {ScoreCells = new List<int>() { 10  } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 10  } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 10  } },
+                new Frame {ScoreCells = new List<int>() { 10 } },
+                new Frame {ScoreCells = new List<int>() { 10, 10 } }
+            };
+
+            return new PlayerGameData
+            {
+                TotalScore = 290,
+                RunningTotalList = new List<int> { 30, 60, 90, 120, 150, 180, 210, 240, 270, 290 },
+                ResultList = frames
+            };
+        }
     }
 }
