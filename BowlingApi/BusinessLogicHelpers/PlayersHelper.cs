@@ -80,7 +80,6 @@ namespace BowlingApi.BusinessLogicHelpers
 
         public async Task<PlayerGameData> GetPlayerGameData(Guid playerId)
         {
-
             var result = await _playersDataService.GetPlayerData(playerId.ToString());
             return result;
         }
@@ -109,41 +108,52 @@ namespace BowlingApi.BusinessLogicHelpers
         public async Task<PlayerGameData> UpdateScore(Guid playerId, int numPins)
         {
                            
-            var score = await _playersDataService.GetPlayerData(playerId.ToString());            
-            
-            Frame frame = null;
-            var cellNum = 0;
-            var frameNum = 1;
+            var score = await GetPlayerGameData(playerId);
 
-            if (score.ResultList.Count > 0)                
-            {
-                frame = score.ResultList[score.ResultList.Count - 1];
-                frameNum = score.ResultList.Count;
-                cellNum = frame.ScoreCells.Count;
-            }
-            
-            if (!(score.ResultList.Count  == 10 && cellNum == 2))
-            {
-                score.TotalScore += numPins;
-            }
-            
-            if (cellNum == 1 && !FrameHasStrike(frame) || score.ResultList.Count == 10) //also logic for 10
-            {
-                cellNum += 1;                       
-                score.RunningTotalList[score.ResultList.Count - 1] = score.TotalScore;
-            }
-            else
-            {
-                cellNum = 1;
-                score.RunningTotalList.Add(score.TotalScore);
-            }
-            UpdateResultList(score.ResultList, frameNum, cellNum, numPins);
-            frameNum = score.ResultList.Count;               
-            HandleStrikesAndSpares(score, frameNum, cellNum, numPins);
-            
+            ComputeNewScore(score, numPins);
+
             await _playersDataService.UpdatePlayerData(score); 
             return score; 
         }        
+
+        public void ComputeNewScore(PlayerGameData playerScore, int numPins)
+        {
+            Frame frame = null;
+            var cellNum = 0;
+            var frameNum = 1;
+        
+            if (playerScore.ResultList.Count > 0)
+            {
+                frame = playerScore.ResultList[playerScore.ResultList.Count - 1];
+                frameNum = playerScore.ResultList.Count;
+                cellNum = frame.ScoreCells.Count;
+            }
+
+            if (!(playerScore.ResultList.Count == 10 && cellNum == 2))
+            {
+                playerScore.TotalScore += numPins;
+            }
+
+            cellNum = UpdateRunningTotalAndReturnNewCellNum(playerScore.RunningTotalList, cellNum, playerScore, frame);
+            UpdateResultList(playerScore.ResultList, frameNum, cellNum, numPins);
+            frameNum = playerScore.ResultList.Count;
+            HandleStrikesAndSpares(playerScore, frameNum, cellNum, numPins);
+        }
+
+        public int UpdateRunningTotalAndReturnNewCellNum(List<int> runningTotal, int cellNum, PlayerGameData playerGameData, Frame curFrame)
+        {
+            //we expected Frame to not be null if cellNum = 1;
+            if (cellNum == 1 && !FrameHasStrike(curFrame) || playerGameData.ResultList.Count == 10) //also logic for 10
+            {                
+                runningTotal[playerGameData.ResultList.Count - 1] = playerGameData.TotalScore;
+                return cellNum += 1;
+            }
+            else
+            {              
+                runningTotal.Add(playerGameData.TotalScore);
+                return 1;
+            }
+        }
 
         public void UpdateResultList(List<Frame> resultList, int frameNum, int cellNum, int numPins)
         {
@@ -205,7 +215,7 @@ namespace BowlingApi.BusinessLogicHelpers
 
         public bool FrameHasStrike(Frame frame)
         {
-            if (frame.ScoreCells.Count < 1)
+            if (frame == null || frame.ScoreCells.Count < 1)
             {
                 return false;
             }
@@ -215,7 +225,7 @@ namespace BowlingApi.BusinessLogicHelpers
 
         public bool FrameHasSpare(Frame frame)
         {
-            if(frame.ScoreCells.Count < 2)
+            if(frame == null || frame.ScoreCells.Count < 2)
             {
                 return false;
             }
