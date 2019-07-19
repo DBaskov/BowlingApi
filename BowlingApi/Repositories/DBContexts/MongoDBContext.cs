@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BowlingApi.DBContexts.Models;
 using BowlingApi.Repositories.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BowlingApi.DBContexts
@@ -39,7 +40,14 @@ namespace BowlingApi.DBContexts
 
         public IMongoCollection<PlayerGameData> PlayersMongoCollection => _playersCollection;
 
-        public Task<bool> ConnectionOk => throw new NotImplementedException();
+        public async Task<bool> ConnectionOk ()
+        {
+           var response = await _database.RunCommandAsync((Command<BsonDocument>)"{ping:1}");
+
+            response.TryGetValue("ok", out BsonValue okVal);
+
+            return okVal.AsDouble == 1;
+        }
 
     }
 }

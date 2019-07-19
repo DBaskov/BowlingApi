@@ -13,6 +13,6 @@ namespace BowlingApi.DBContexts
 
         IMongoCollection<PlayerGameData> PlayersMongoCollection { get; }
 
-        Task<bool> ConnectionOk { get; }
+        Task<bool> ConnectionOk();
     }
 }

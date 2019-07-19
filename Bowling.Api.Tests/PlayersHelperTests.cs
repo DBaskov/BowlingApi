@@ -1392,6 +1392,131 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(false, result.Item1);
             Assert.AreEqual(-1, result.Item2);
         }
+
+        [TestMethod]
+        public async Task RecalculateRunningTotalPositiveTest()
+        {
+            var runningTotal = new List<int>() { 8, 12, 22 };
+            var runningTotalOld = new List<int>() { 8, 12, 22 };
+            var oldScore = 4;
+            var newScore = 9;
+            int frameNum = 2;
+
+            playersHelper.RecalculateRunningTotal(runningTotal, newScore, oldScore, frameNum);
+
+            Assert.IsTrue(runningTotal.Count == 3);
+            Assert.AreEqual(17, runningTotal[1]);
+            Assert.AreEqual(27, runningTotal[2]);
+        }
+
+        [TestMethod]
+        public async Task RecalculateRunningTotalTwoFrameFirstFrameChangeTest()
+        {
+            var runningTotal = new List<int>() { 8, 18};
+            var oldScore = 8;
+            var newScore = 18;
+            int frameNum = 1;
+
+            playersHelper.RecalculateRunningTotal(runningTotal, newScore, oldScore, frameNum);
+
+            Assert.IsTrue(runningTotal.Count == 2);
+            Assert.AreEqual(18, runningTotal[0]);
+            Assert.AreEqual(28, runningTotal[1]);
+        }
+
+        [TestMethod]
+        public async Task RecalculateRunningTotalTwoFrameSecondFrameChangeTest()
+        {
+            var runningTotal = new List<int>() { 8, 18 };
+            var oldScore = 18;
+            var newScore = 25;
+            int frameNum = 2;
+
+            playersHelper.RecalculateRunningTotal(runningTotal, newScore, oldScore, frameNum);
+
+            Assert.IsTrue(runningTotal.Count == 2);
+            Assert.AreEqual(8, runningTotal[0]);
+            Assert.AreEqual(25, runningTotal[1]);
+        }
+
+        [TestMethod]
+        public async Task RecalculateRunningTotalChangeFirstFrameTest()
+        {
+            var runningTotal = new List<int>() { 8, 12, 22, 32, 40, 45, 50, 70, 90, 105 };
+            var oldScore = 8;
+            var newScore = 20;
+            int frameNum = 1;
+
+            playersHelper.RecalculateRunningTotal(runningTotal, newScore, oldScore, frameNum);
+
+            Assert.IsTrue(runningTotal.Count == 10);
+            Assert.AreEqual(20, runningTotal[0]);
+            Assert.AreEqual(24, runningTotal[1]);
+            Assert.AreEqual(57, runningTotal[5]);
+            Assert.AreEqual(117, runningTotal[9]);
+        }
+
+        [TestMethod]
+        public async Task RecalculateRunningTotalChangeLastFrameTest()
+        {
+            var runningTotal = new List<int>() { 8, 12, 22, 32, 40, 45, 50, 70, 90, 105 };
+            var oldScore = 1;
+            var newScore = 10;
+            int frameNum = 10;
+
+            playersHelper.RecalculateRunningTotal(runningTotal, newScore, oldScore, frameNum);
+
+            Assert.IsTrue(runningTotal.Count == 10);
+            Assert.AreEqual(114, runningTotal[9]);
+            Assert.AreEqual(90, runningTotal[8]);
+            Assert.AreEqual(45, runningTotal[5]);
+            Assert.AreEqual(8, runningTotal[0]);
+            Assert.AreEqual(12, runningTotal[1]);
+        }
+
+        [TestMethod]
+        public async Task RecalculateRunningTotalFirstFrameNegativeChangeTest()
+        {
+            var runningTotal = new List<int>() { 8, 12, 22, 32, 40, 45, 50, 70, 90, 105 };
+            var oldScore = 8;
+            var newScore = 1;
+            int frameNum = 1;
+
+            playersHelper.RecalculateRunningTotal(runningTotal, newScore, oldScore, frameNum);
+
+            Assert.IsTrue(runningTotal.Count == 10);
+            Assert.AreEqual(98, runningTotal[9]);
+            Assert.AreEqual(83, runningTotal[8]);
+            Assert.AreEqual(38, runningTotal[5]);
+            Assert.AreEqual(1, runningTotal[0]);
+            Assert.AreEqual(5, runningTotal[1]);
+        }
+
+        [TestMethod]
+        public async Task RecalculateRunningTotalLastFrameNegativeChangeTest()
+        {
+            var runningTotal = new List<int>() { 8, 12, 22, 32, 40, 45, 50, 70, 90, 105 };
+            var oldScore = 8;
+            var newScore = 1;
+            int frameNum = 10;
+
+            playersHelper.RecalculateRunningTotal(runningTotal, newScore, oldScore, frameNum);
+
+            Assert.IsTrue(runningTotal.Count == 10);
+            Assert.AreEqual(98, runningTotal[9]);
+            Assert.AreEqual(90, runningTotal[8]);
+            Assert.AreEqual(45, runningTotal[5]);
+            Assert.AreEqual(8, runningTotal[0]);
+            Assert.AreEqual(12, runningTotal[1]);
+        }
+        /*
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumResultListEmptyTest()
+        {
+            var resultList = new List<int>
+            playersHelper.FoundSpareOneShotBackAndFrameNum()
+        } */
+
         //bonus frame tests
         private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<int> frame)
         {

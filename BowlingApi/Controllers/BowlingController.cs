@@ -38,8 +38,9 @@ namespace BowlingApi.Controllers
                     RunningTotalList = result.RunningTotalList
                 });
             }
-            catch(Exception)
+            catch(Exception e)
             {
+                Console.WriteLine("Error in Post action", e);
                 return StatusCode(500);
             }
         }
@@ -59,8 +60,9 @@ namespace BowlingApi.Controllers
                     return NotFound();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine("Error in Put action", e);
                 return StatusCode(500);
             }
         }
@@ -91,6 +93,7 @@ namespace BowlingApi.Controllers
             }
             catch(Exception e)
             {
+                Console.WriteLine("Error in {playerId}/calculateNewScore action ", e);
                 return StatusCode(500);
             }
         }
@@ -121,6 +124,7 @@ namespace BowlingApi.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine("Error in Get action", e);
                 return StatusCode(500);
             }
         }               
@@ -144,8 +148,9 @@ namespace BowlingApi.Controllers
                     return NotFound();
                 }
             }
-            catch(Exception)
+            catch(Exception e)
             {
+                Console.WriteLine("Error in Delete action", e);
                 return StatusCode(500);
             }
         }
