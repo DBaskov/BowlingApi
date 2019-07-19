@@ -1,5 +1,4 @@
 ﻿
-using BowlingApi.Repositories.Models.HelperModels;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,7 @@ namespace BowlingApi.Repositories.Models
 
         public List<int> RunningTotalList { get; set; } = new List<int>();
 
-        public List<Frame> ResultList { get; set; } = new List<Frame>();
+        public List<List<int>> ResultList { get; set; } = new List<List<int>>();
    
     }
 }

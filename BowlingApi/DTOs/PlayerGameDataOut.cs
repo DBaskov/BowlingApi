@@ -1,5 +1,4 @@
 ﻿
-using BowlingApi.Repositories.Models.HelperModels;
 using System.Collections.Generic;
 
 namespace BowlingApi.DTOs
@@ -12,6 +11,6 @@ namespace BowlingApi.DTOs
 
         public List<int> RunningTotalList { get; set; }
 
-        public List<Frame> ResultList { get; set; }
+        public List<List<int>> ResultList { get; set; }
     }
 }

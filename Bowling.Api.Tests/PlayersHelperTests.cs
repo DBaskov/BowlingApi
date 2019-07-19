@@ -1,6 +1,5 @@
 using BowlingApi.BusinessLogicHelpers;
 using BowlingApi.Repositories.Models;
-using BowlingApi.Repositories.Models.HelperModels;
 using BowlingApi.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -53,7 +52,7 @@ namespace Bowling.Api.Tests
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
             Assert.AreEqual(result.TotalScore, numPins);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], numPins);
+            Assert.AreEqual(result.ResultList[0][0], numPins);
         }        
 
         [TestMethod]
@@ -83,8 +82,8 @@ namespace Bowling.Api.Tests
 
             Assert.AreEqual(oldPlayerScore.TotalScore + numPins, result.TotalScore);
             Assert.AreEqual(oldPlayerScore.TotalScore + numPins, result.RunningTotalList[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(numPins, result.ResultList[0].ScoreCells[1]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(numPins, result.ResultList[0][1]);
         }
 
         [TestMethod]
@@ -107,9 +106,9 @@ namespace Bowling.Api.Tests
 
             Assert.AreEqual(oldPlayerScore.TotalScore + numPins, result.TotalScore);
             Assert.AreEqual(oldPlayerScore.TotalScore + numPins, result.RunningTotalList[1]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[1], result.ResultList[0].ScoreCells[1]);
-            Assert.AreEqual(numPins, result.ResultList[1].ScoreCells[0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][1], result.ResultList[0][1]);
+            Assert.AreEqual(numPins, result.ResultList[1][0]);
         }
 
         [TestMethod]
@@ -126,7 +125,7 @@ namespace Bowling.Api.Tests
 
             Assert.AreEqual(result.TotalScore, 0);
             Assert.AreEqual(result.RunningTotalList[0], 0);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], 0);
+            Assert.AreEqual(result.ResultList[0][0], 0);
         }
 
         [TestMethod]
@@ -149,8 +148,8 @@ namespace Bowling.Api.Tests
 
             Assert.AreEqual(result.TotalScore, 0);
             Assert.AreEqual(result.RunningTotalList[0], 0);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], 0);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[1], 0);
+            Assert.AreEqual(result.ResultList[0][0], 0);
+            Assert.AreEqual(result.ResultList[0][1], 0);
         }
 
         [TestMethod]
@@ -173,8 +172,8 @@ namespace Bowling.Api.Tests
 
             Assert.AreEqual(oldPlayerScore.TotalScore, result.TotalScore);
             Assert.AreEqual(oldPlayerScore.RunningTotalList[0], result.RunningTotalList[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(numPins, result.ResultList[0].ScoreCells[1]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(numPins, result.ResultList[0][1]);
         }
 
         [TestMethod]
@@ -197,8 +196,8 @@ namespace Bowling.Api.Tests
 
             Assert.AreEqual(result.TotalScore, 10);
             Assert.AreEqual(oldPlayerScore.RunningTotalList[0], result.RunningTotalList[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(numPins, result.ResultList[0].ScoreCells[1]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(numPins, result.ResultList[0][1]);
         }
          
         [TestMethod]
@@ -223,10 +222,10 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(10 + numPins + numPins, result.TotalScore);
             Assert.AreEqual(10 + numPins, result.RunningTotalList[0]);
             Assert.AreEqual(result.RunningTotalList[0] + numPins, result.RunningTotalList[1]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[1], result.ResultList[0].ScoreCells[1]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][1], result.ResultList[0][1]);
 
-            Assert.AreEqual(numPins, result.ResultList[1].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[1][0]);
         }
 
         [TestMethod]
@@ -250,9 +249,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.TotalScore, 10 + numPins + numPins);
             Assert.AreEqual(result.RunningTotalList[0], 10 + numPins);
             Assert.AreEqual(result.RunningTotalList[1], 10 + numPins + numPins);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], oldPlayerScore.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[1], oldPlayerScore.ResultList[0].ScoreCells[1]);
-            Assert.AreEqual(result.ResultList[1].ScoreCells[0], numPins);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], oldPlayerScore.ResultList[0][1]);
+            Assert.AreEqual(result.ResultList[1][0], numPins);
 
         }
 
@@ -276,8 +275,8 @@ namespace Bowling.Api.Tests
 
             Assert.AreEqual(result.TotalScore, 10);
             Assert.AreEqual(result.RunningTotalList[0], 10);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], playerScore.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[1], numPins);
+            Assert.AreEqual(result.ResultList[0][0], playerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], numPins);
         }
 
         [TestMethod]
@@ -302,9 +301,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.TotalScore, 10);
             Assert.AreEqual(result.RunningTotalList[0], 10);
             Assert.AreEqual(result.RunningTotalList[1], 10);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], oldPlayerScore.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[1], oldPlayerScore.ResultList[0].ScoreCells[1]);
-            Assert.AreEqual(result.ResultList[1].ScoreCells[0], numPins);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[0][1], oldPlayerScore.ResultList[0][1]);
+            Assert.AreEqual(result.ResultList[1][0], numPins);
 
         }
         
@@ -322,7 +321,7 @@ namespace Bowling.Api.Tests
 
             Assert.AreEqual(result.TotalScore, 10);
             Assert.AreEqual(result.RunningTotalList[0], 10);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], 10);
+            Assert.AreEqual(result.ResultList[0][0], 10);
         }
 
         [TestMethod]
@@ -334,8 +333,7 @@ namespace Bowling.Api.Tests
             var oldFrame = new List<int>() { 10 };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
-            playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
-            ;
+            playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);           
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
@@ -347,8 +345,8 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.TotalScore, 14);
             Assert.AreEqual(result.RunningTotalList[0], 10);
             Assert.AreEqual(result.RunningTotalList[1], 14);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], oldPlayerScore.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(result.ResultList[1].ScoreCells[0], numPins);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[1][0], numPins);
             
         }
 
@@ -358,9 +356,9 @@ namespace Bowling.Api.Tests
             var playerScore = new PlayerGameData();
             var oldTotalScore = 14;
             var oldRunningTotalList = new List<int> { 10, 14 };
-            var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 4 } }
+            var oldFrames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 4 }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -376,9 +374,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.TotalScore, (10 + 4 + numPins) + 4 + numPins);
             Assert.AreEqual(result.RunningTotalList[0], 10 + 4 + numPins);
             Assert.AreEqual(result.RunningTotalList[1], result.TotalScore);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], oldPlayerScore.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(result.ResultList[1].ScoreCells[0], oldPlayerScore.ResultList[1].ScoreCells[0]);
-            Assert.AreEqual(result.ResultList[1].ScoreCells[1], numPins);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[1][0], oldPlayerScore.ResultList[1][0]);
+            Assert.AreEqual(result.ResultList[1][1], numPins);
             
         }
 
@@ -388,9 +386,9 @@ namespace Bowling.Api.Tests
             var playerScore = new PlayerGameData();
             var oldTotalScore = 28;
             var oldRunningTotalList = new List<int> { 19, 28 };           
-            var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 4, 5 } }
+            var oldFrames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 4, 5 }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -407,10 +405,10 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(result.RunningTotalList[0], 19);
             Assert.AreEqual(result.RunningTotalList[1], 28);
             Assert.AreEqual(result.RunningTotalList[2], 31);
-            Assert.AreEqual(result.ResultList[0].ScoreCells[0], oldPlayerScore.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(result.ResultList[1].ScoreCells[0], oldPlayerScore.ResultList[1].ScoreCells[0]);
-            Assert.AreEqual(result.ResultList[1].ScoreCells[1], oldPlayerScore.ResultList[1].ScoreCells[1]);
-            Assert.AreEqual(result.ResultList[2].ScoreCells[0], numPins);
+            Assert.AreEqual(result.ResultList[0][0], oldPlayerScore.ResultList[0][0]);
+            Assert.AreEqual(result.ResultList[1][0], oldPlayerScore.ResultList[1][0]);
+            Assert.AreEqual(result.ResultList[1][1], oldPlayerScore.ResultList[1][1]);
+            Assert.AreEqual(result.ResultList[2][0], numPins);
             
         }
 
@@ -440,8 +438,8 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(20, result.TotalScore);
             Assert.AreEqual(10, result.RunningTotalList[0]);
             Assert.AreEqual(20, result.RunningTotalList[1]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(10, result.ResultList[1].ScoreCells[0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(10, result.ResultList[1][0]);
             
             
         }
@@ -458,9 +456,9 @@ namespace Bowling.Api.Tests
             var playerScore = new PlayerGameData();
             var oldTotalScore = 14;
             var oldRunningTotalList = new List<int> { 10, 14 };            
-            var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 4 } }
+            var oldFrames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 4 }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -476,9 +474,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(10 + 10 + 10, result.TotalScore);
             Assert.AreEqual(20, result.RunningTotalList[0]);
             Assert.AreEqual(30, result.RunningTotalList[1]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
-            Assert.AreEqual(6, result.ResultList[1].ScoreCells[1]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[1][0], result.ResultList[1][0]);
+            Assert.AreEqual(6, result.ResultList[1][1]);
             
         }
         
@@ -488,9 +486,9 @@ namespace Bowling.Api.Tests
             var playerScore = new PlayerGameData();
             var oldTotalScore = 30;
             var oldRunningTotalList = new List<int> { 20, 30 };            
-            var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 4, 6 } }
+            var oldFrames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 4, 6 }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -507,10 +505,10 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(20, result.RunningTotalList[0]);
             Assert.AreEqual(36, result.RunningTotalList[1]);
             Assert.AreEqual(42, result.RunningTotalList[2]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[1], result.ResultList[1].ScoreCells[1]);
-            Assert.AreEqual(numPins, result.ResultList[2].ScoreCells[0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[1][0], result.ResultList[1][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[1][1], result.ResultList[1][1]);
+            Assert.AreEqual(numPins, result.ResultList[2][0]);
             
         }
 
@@ -520,9 +518,9 @@ namespace Bowling.Api.Tests
             var playerScore = new PlayerGameData();
             var oldTotalScore = 20;
             var oldRunningTotalList = new List<int> { 10, 20 };            
-            var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 10 } }
+            var oldFrames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 10 }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -539,9 +537,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(26, result.RunningTotalList[0]);
             Assert.AreEqual(36, result.RunningTotalList[1]);
             Assert.AreEqual(42, result.RunningTotalList[2]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
-            Assert.AreEqual(numPins, result.ResultList[2].ScoreCells[0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[1][0], result.ResultList[1][0]);
+            Assert.AreEqual(numPins, result.ResultList[2][0]);
             
             
         }
@@ -553,9 +551,9 @@ namespace Bowling.Api.Tests
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10, 10 };
             
-            var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 0 } }
+            var oldFrames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 0 }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -571,9 +569,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(16 + 0 + 6, result.TotalScore);
             Assert.AreEqual(16, result.RunningTotalList[0]);
             Assert.AreEqual(22, result.RunningTotalList[1]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
-            Assert.AreEqual(numPins, result.ResultList[1].ScoreCells[1]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[1][0], result.ResultList[1][0]);
+            Assert.AreEqual(numPins, result.ResultList[1][1]);
             
         }
         
@@ -584,9 +582,9 @@ namespace Bowling.Api.Tests
             var oldTotalScore = 14;
             var oldRunningTotalList = new List<int> { 10, 14 };
            
-            var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 }  },
-                new Frame {ScoreCells = new List<int>() { 4 } }
+            var oldFrames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 4 }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -602,9 +600,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(18, result.TotalScore);
             Assert.AreEqual(14, result.RunningTotalList[0]);
             Assert.AreEqual(18, result.RunningTotalList[1]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
-            Assert.AreEqual(0, result.ResultList[1].ScoreCells[1]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[1][0], result.ResultList[1][0]);
+            Assert.AreEqual(0, result.ResultList[1][1]);
             
         }
 
@@ -614,9 +612,9 @@ namespace Bowling.Api.Tests
             var playerScore = new PlayerGameData();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10, 10 };            
-            var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 0 } }
+            var oldFrames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 0 }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -632,9 +630,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(10, result.TotalScore);
             Assert.AreEqual(10, result.RunningTotalList[0]);
             Assert.AreEqual(10, result.RunningTotalList[1]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
-            Assert.AreEqual(0, result.ResultList[1].ScoreCells[1]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[1][0], result.ResultList[1][0]);
+            Assert.AreEqual(0, result.ResultList[1][1]);
             
         }
 
@@ -644,9 +642,9 @@ namespace Bowling.Api.Tests
             var playerScore = new PlayerGameData();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10, 10 };            
-            var oldFrames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 0 } }
+            var oldFrames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 0 }
             };
 
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
@@ -662,9 +660,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(20 + 10, result.TotalScore);
             Assert.AreEqual(20, result.RunningTotalList[0]);
             Assert.AreEqual(30, result.RunningTotalList[1]);
-            Assert.AreEqual(oldPlayerScore.ResultList[0].ScoreCells[0], result.ResultList[0].ScoreCells[0]);
-            Assert.AreEqual(oldPlayerScore.ResultList[1].ScoreCells[0], result.ResultList[1].ScoreCells[0]);
-            Assert.AreEqual(10, result.ResultList[1].ScoreCells[1]);
+            Assert.AreEqual(oldPlayerScore.ResultList[0][0], result.ResultList[0][0]);
+            Assert.AreEqual(oldPlayerScore.ResultList[1][0], result.ResultList[1][0]);
+            Assert.AreEqual(10, result.ResultList[1][1]);
             
         }
 
@@ -683,7 +681,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(142, result.TotalScore);
             Assert.AreEqual(142, result.RunningTotalList[9]);
             Assert.AreEqual(137, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -694,7 +692,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 5 } });
+            playerScore.ResultList.Add( new List<int> { 5 });
             playerScore.TotalScore += 5;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 5);
 
@@ -705,8 +703,8 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(145, result.TotalScore);
             Assert.AreEqual(145, result.RunningTotalList[9]);
             Assert.AreEqual(137, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
-            Assert.AreEqual(5, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][1]);
+            Assert.AreEqual(5, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -723,7 +721,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10, 10 } });
+            playerScore.ResultList.Add(new List<int> { 10, 10 });
             playerScore.TotalScore += 20;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10 + 10);
 
@@ -734,9 +732,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(167, result.TotalScore);
             Assert.AreEqual(167, result.RunningTotalList[9]);
             Assert.AreEqual(137, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
-            Assert.AreEqual(10, result.ResultList[9].ScoreCells[1]);
-            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][2]);
+            Assert.AreEqual(10, result.ResultList[9][1]);
+            Assert.AreEqual(10, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -752,7 +750,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 0 } });
+            playerScore.ResultList.Add(new List<int> { 0 });
             playerScore.TotalScore += 0;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8]);
 
@@ -763,8 +761,8 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(137, result.TotalScore);
             Assert.AreEqual(137, result.RunningTotalList[9]);
             Assert.AreEqual(137, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
-            Assert.AreEqual(0, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][1]);
+            Assert.AreEqual(0, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -775,7 +773,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10, 4 } });
+            playerScore.ResultList.Add(new List<int> { 10, 4 });
             playerScore.TotalScore += 14;
             playerScore.RunningTotalList.Add(playerScore.TotalScore);
 
@@ -786,9 +784,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(157, result.TotalScore);
             Assert.AreEqual(157, result.RunningTotalList[9]);
             Assert.AreEqual(137, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
-            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
-            Assert.AreEqual(4, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(numPins, result.ResultList[9][2]);
+            Assert.AreEqual(10, result.ResultList[9][0]);
+            Assert.AreEqual(4, result.ResultList[9][1]);
         }
 
         [TestMethod]
@@ -799,7 +797,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 4, 6 } });
+            playerScore.ResultList.Add(new List<int> { 4, 6 });
             playerScore.TotalScore += 10;
             playerScore.RunningTotalList.Add(playerScore.TotalScore);
 
@@ -810,9 +808,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(157, result.TotalScore);
             Assert.AreEqual(157, result.RunningTotalList[9]);
             Assert.AreEqual(137, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
-            Assert.AreEqual(4, result.ResultList[9].ScoreCells[0]);
-            Assert.AreEqual(6, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(numPins, result.ResultList[9][2]);
+            Assert.AreEqual(4, result.ResultList[9][0]);
+            Assert.AreEqual(6, result.ResultList[9][1]);
         }
 
         [TestMethod]
@@ -823,7 +821,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 4, 6 } });
+            playerScore.ResultList.Add(new List<int> { 4, 6 });
             playerScore.TotalScore += 10;
             playerScore.RunningTotalList.Add(playerScore.TotalScore);
 
@@ -834,9 +832,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(152, result.TotalScore);
             Assert.AreEqual(152, result.RunningTotalList[9]);
             Assert.AreEqual(137, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
-            Assert.AreEqual(4, result.ResultList[9].ScoreCells[0]);
-            Assert.AreEqual(6, result.ResultList[9].ScoreCells[1]);
+            Assert.AreEqual(numPins, result.ResultList[9][2]);
+            Assert.AreEqual(4, result.ResultList[9][0]);
+            Assert.AreEqual(6, result.ResultList[9][1]);
         }
 
         [TestMethod]
@@ -847,7 +845,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10, 10 } });
+            playerScore.ResultList.Add(new List<int> { 10, 10 });
             playerScore.TotalScore += 20;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10 + 10);
 
@@ -858,9 +856,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(162, result.TotalScore);
             Assert.AreEqual(162, result.RunningTotalList[9]);
             Assert.AreEqual(137, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
-            Assert.AreEqual(10, result.ResultList[9].ScoreCells[1]);
-            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][2]);
+            Assert.AreEqual(10, result.ResultList[9][1]);
+            Assert.AreEqual(10, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -872,7 +870,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10 } });
+            playerScore.ResultList.Add(new List<int> { 10 });
             playerScore.TotalScore += 10;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10);
 
@@ -883,8 +881,8 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(180, result.TotalScore);
             Assert.AreEqual(180, result.RunningTotalList[9]);
             Assert.AreEqual(160, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
-            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][1]);
+            Assert.AreEqual(10, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -896,7 +894,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 10, 10 } });
+            playerScore.ResultList.Add(new List<int> { 10, 10 });
             playerScore.TotalScore = 180; //20 for strike in frame before bonus and another for 2 20s
             playerScore.RunningTotalList[8] = 160;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10);
@@ -908,9 +906,9 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(190, result.TotalScore);
             Assert.AreEqual(190, result.RunningTotalList[9]);
             Assert.AreEqual(160, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
-            Assert.AreEqual(10, result.ResultList[9].ScoreCells[1]);
-            Assert.AreEqual(10, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][2]);
+            Assert.AreEqual(10, result.ResultList[9][1]);
+            Assert.AreEqual(10, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -922,7 +920,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 4 } });
+            playerScore.ResultList.Add(new List<int> { 4 });
             playerScore.TotalScore += 4;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 4);
 
@@ -933,8 +931,8 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(160, result.TotalScore);
             Assert.AreEqual(160, result.RunningTotalList[9]);
             Assert.AreEqual(150, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
-            Assert.AreEqual(4, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][1]);
+            Assert.AreEqual(4, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -946,7 +944,7 @@ namespace Bowling.Api.Tests
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
             mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
 
-            playerScore.ResultList.Add(new Frame { ScoreCells = new List<int> { 4 } });
+            playerScore.ResultList.Add(new List<int> { 4 });
             playerScore.TotalScore += 4;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 4);
 
@@ -957,8 +955,8 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(156, result.TotalScore);
             Assert.AreEqual(156, result.RunningTotalList[9]);
             Assert.AreEqual(148, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[1]);
-            Assert.AreEqual(4, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][1]);
+            Assert.AreEqual(4, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -978,7 +976,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(184, result.RunningTotalList[9]);
             Assert.AreEqual(174, result.RunningTotalList[8]);
             Assert.AreEqual(164, result.RunningTotalList[7]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -997,7 +995,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(160, result.TotalScore);
             Assert.AreEqual(160, result.RunningTotalList[9]);
             Assert.AreEqual(150, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -1016,7 +1014,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(148, result.TotalScore);
             Assert.AreEqual(148, result.RunningTotalList[9]);
             Assert.AreEqual(144, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[0]);
+            Assert.AreEqual(numPins, result.ResultList[9][0]);
         }
 
         [TestMethod]
@@ -1034,7 +1032,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(0, result.TotalScore);
             Assert.AreEqual(0, result.RunningTotalList[9]);
             Assert.AreEqual(0, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
+            Assert.AreEqual(numPins, result.ResultList[9][2]);
         }
 
         [TestMethod]
@@ -1052,7 +1050,7 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(300, result.TotalScore);
             Assert.AreEqual(300, result.RunningTotalList[9]);
             Assert.AreEqual(270, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
+            Assert.AreEqual(numPins, result.ResultList[9][2]);
         }
 
         [TestMethod]
@@ -1070,33 +1068,29 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(116, result.TotalScore);
             Assert.AreEqual(116, result.RunningTotalList[9]);
             Assert.AreEqual(102, result.RunningTotalList[8]);
-            Assert.AreEqual(numPins, result.ResultList[9].ScoreCells[2]);
+            Assert.AreEqual(numPins, result.ResultList[9][2]);
         }
         
 
         [TestMethod]
         public async Task GetScorOneShotsBackAndFrameNumOneScoreTest()
         {
-            //var resultList = new List<List<int>>() { new List<int>() { 4 } };
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 4 }
-                }               
+            //var resultList = new List<List<int>>() { new List<int>() { 4 };
+            var resultList = new List<List<int>>() {
+                new List<int> { 4 }                            
             };
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 1);
 
             Assert.AreEqual(result.Item2, -1);
             Assert.AreEqual(result.Item1, 0);
-        }      
+        }
 
         [TestMethod]
         public async Task GetScorOneShotsBackAndFrameNumTwoScoreTest()
         {
-            //var resultList = new List<List<int>>() { new List<int>() { 2, 4 } };
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 2, 4 }
-                }               
+            //var resultList = new List<List<int>>() { new List<int>() { 2, 4 };
+            var resultList = new List<List<int>>() {
+                new List<int> {2, 4 }                              
             };
 
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 2);
@@ -1108,14 +1102,10 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task GetScorOneShotsBackAndFrameNumThreeScoreTest()
         {
-            //var resultList = new List<List<int>>() { new List<int>() { 2, 4 }, new List<int>() { 5 } };
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 2, 4 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5 }
-                }
+            //var resultList = new List<List<int>>() { new List<int>() { 2, 4 }, new List<int>() { 5 };
+            var resultList = new List<List<int>>() {
+                new List<int> {2, 4 },
+                new List<int> {5 }               
             };
 
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 2, 1);
@@ -1127,12 +1117,10 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task GetScorOneShotsBackAndFrameNumSpareFristFrameTest()
         {
-            //var resultList = new List<List<int>>() { new List<int>() { 5, 10 } };
+            //var resultList = new List<List<int>>() { new List<int>() { 5, 10 };
 
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 5, 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> {5, 5 }               
             };
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 1);
 
@@ -1143,15 +1131,11 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task GetScorOneShotsBackAndFrameNumSpareSecondFrameTest()
         {
-            //var resultList = new List<List<int>>() { new List<int>() { 2, 4 }, new List<int>() { 5, 10 } };
+            //var resultList = new List<List<int>>() { new List<int>() { 2, 4 }, new List<int>() { 5, 10 };
 
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 2, 4 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5, 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> {2, 4 },
+                new List<int> {5, 5 }
             };
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 2, 2);
 
@@ -1163,11 +1147,10 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task GetScorOneShotsBackAndFrameNumStrikeFirstFrame()
         {
-            //var resultList = new List<List<int>>() { new List<int>() { 10, -1 } };
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 10 }
-                }               
+            //var resultList = new List<List<int>>() { new List<int>() { 10, -1 };
+            var resultList = new List<List<int>>() {
+                new List<int> {
+                     10 }               
             };
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 1, 1);
 
@@ -1179,13 +1162,9 @@ namespace Bowling.Api.Tests
         public async Task GetScorOneShotsBackAndFrameNumStrikeSecondFrameTest()
         {
             //var resultList = new List<List<int>>() { new List<int>() { 2, 4 }, new List<int>() { 10, -1 } };
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 2, 4 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 10 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> {2, 4 },
+                new List<int> { 10 }
             };
             var result = playersHelper.GetScoreOneShotBackAndFrameNum(resultList, 2, 1);
 
@@ -1197,13 +1176,9 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task FoundStrikeTwoShotsBackAndFrameNumFirstShotTest()
         {
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 2, 4 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> {2, 4 },
+                new List<int> { 5 }
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 1, 1);
@@ -1215,13 +1190,9 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task FoundStrikeTwoShotsBackAndFrameNumSecondShotTest()
         {
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 2, 4 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> {2, 4 },
+                new List<int> { 5 }      
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 1, 2);
@@ -1233,13 +1204,9 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task FoundStrikeTwoShotsBackAndFrameNumThirdShotTest()
         {
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 2, 4 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> { 2, 4 },
+                new List<int> { 5 }
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 2, 1);
@@ -1251,13 +1218,9 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task FoundStrikeTwoShotsBackAndFrameNumFourthShotTest()
         {
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 2, 4 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5, 3 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> { 2, 4 },
+                new List<int> { 5, 3 }
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 2, 2);
@@ -1269,13 +1232,9 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task FoundStrikeTwoShotsBackAndFrameNumSpareShotBeforeTest()
         {
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 4, 6 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 6 },
+                new List<int> { 5 }
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 2, 1);
@@ -1289,13 +1248,9 @@ namespace Bowling.Api.Tests
         {
             //var resultList = new List<List<int>>() { new List<int>() { 10, -1 }, new List<int>() { 5 } };
 
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 10 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> { 10 },
+                new List<int> { 5 }
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 2, 1);
@@ -1309,13 +1264,9 @@ namespace Bowling.Api.Tests
         {
             //var resultList = new List<List<int>>() { new List<int>() { 10, -1 }, new List<int>() { 5 } };
 
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 10 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> { 10 },
+                new List<int> {5 }               
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 2, 1);
@@ -1329,16 +1280,10 @@ namespace Bowling.Api.Tests
         {
             //var resultList = new List<List<int>>() { new List<int>() { 10, -1 }, new List<int>() { 10, -1 }, new List<int>() { 5 } };
 
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 10 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 10 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> { 10 },
+                new List<int> { 10 },
+                new List<int> { 5 }
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 3, 1);
@@ -1352,16 +1297,10 @@ namespace Bowling.Api.Tests
         {
             //var resultList = new List<List<int>>() { new List<int>() { -1, 10 }, new List<int>() { 10, -1 }, new List<int>() { 5 } };
 
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 4, 6 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 10 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 5 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 6 },
+                new List<int> { 10 },
+                new List<int> { 5 }               
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 3, 1);
@@ -1375,16 +1314,10 @@ namespace Bowling.Api.Tests
         {
             //var resultList = new List<List<int>>() { new List<int>() { -1, 10 }, new List<int>() { 10, -1 }, new List<int>() { 5 } };
 
-            var resultList = new List<Frame>() {
-                new Frame {
-                    ScoreCells = new List<int>() { 10 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 4, 5 }
-                },
-                new Frame {
-                    ScoreCells = new List<int>() { 3 }
-                }
+            var resultList = new List<List<int>>() {
+                new List<int> { 10 },
+                new List<int> { 4, 5 },
+                new List<int> { 3 }
             };
 
             var result = playersHelper.FoundStrikeTwoShotsBackAndFrameNum(resultList, 3, 1);
@@ -1524,11 +1457,11 @@ namespace Bowling.Api.Tests
             {
                 TotalScore = totalScore,
                 RunningTotalList = runningTotal,
-                ResultList = new List<Frame>() { new Frame { ScoreCells = frame } }
+                ResultList = new List<List<int>>() { frame }
             };
         }
 
-        private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<Frame> frames)
+        private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<List<int>> frames)
         {
             return new PlayerGameData
             {
@@ -1540,16 +1473,16 @@ namespace Bowling.Api.Tests
 
         private static PlayerGameData AllNonBonusFramesFilled()
         {
-            var frames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 0, 10 } },
-                new Frame {ScoreCells = new List<int>() { 5, 4 } },
-                new Frame {ScoreCells = new List<int>() { 3, 7 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 1, 9 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 4, 4 } },
-                new Frame {ScoreCells = new List<int>() { 2, 5 } }
+            var frames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 0, 10 },
+                new List<int> { 5, 4 },
+                new List<int> { 3, 7 },
+                new List<int> { 10 },
+                new List<int> { 1, 9 },
+                new List<int> { 10 },
+                new List<int> { 4, 4 },
+                new List<int> { 2, 5 }
             };
 
             return new PlayerGameData
@@ -1562,16 +1495,16 @@ namespace Bowling.Api.Tests
 
         private static PlayerGameData AllNonBonusFramesFilledStrikeAtEnd()
         {
-            var frames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 0, 10 } },
-                new Frame {ScoreCells = new List<int>() { 5, 4 } },
-                new Frame {ScoreCells = new List<int>() { 3, 7 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 1, 9 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 4, 4 } },
-                new Frame {ScoreCells = new List<int>() { 10 } }
+            var frames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 0, 10 },
+                new List<int> { 5, 4 },
+                new List<int> { 3, 7 },
+                new List<int> { 10 },
+                new List<int> { 1, 9 },
+                new List<int> { 10 },
+                new List<int> { 4, 4 },
+                new List<int> { 10 }
             };
 
             return new PlayerGameData
@@ -1584,16 +1517,16 @@ namespace Bowling.Api.Tests
 
         private static PlayerGameData AllNonBonusFramesFilledTwoStrikesAtEnd()
         {
-            var frames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 0, 10 } },
-                new Frame {ScoreCells = new List<int>() { 5, 4 } },
-                new Frame {ScoreCells = new List<int>() { 3, 7 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 1, 9 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 10 } }
+            var frames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 0, 10 },
+                new List<int> { 5, 4 },
+                new List<int> { 3, 7 },
+                new List<int> { 10 },
+                new List<int> { 1, 9 },
+                new List<int> { 10 },
+                new List<int> { 10 },
+                new List<int> { 10 }
             };
 
             return new PlayerGameData
@@ -1606,16 +1539,16 @@ namespace Bowling.Api.Tests
 
         private static PlayerGameData AllNonBonusFramesFilledSpareAtEnd()
         {
-            var frames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 0, 10 } },
-                new Frame {ScoreCells = new List<int>() { 5, 4 } },
-                new Frame {ScoreCells = new List<int>() { 3, 7 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 1, 9 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 4, 4 } },
-                new Frame {ScoreCells = new List<int>() { 4, 6 } }
+            var frames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 0, 10 },
+                new List<int> { 5, 4 },
+                new List<int> { 3, 7 },
+                new List<int> { 10 },
+                new List<int> { 1, 9 },
+                new List<int> { 10 },
+                new List<int> { 4, 4 },
+                new List<int> { 4, 6 }
             };
 
             return new PlayerGameData
@@ -1628,17 +1561,17 @@ namespace Bowling.Api.Tests
 
         private static PlayerGameData GetFramesFilledExceptOneAllZeroes()
         {
-            var frames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 0, 0 } },
-                new Frame {ScoreCells = new List<int>() { 0, 0 } },
-                new Frame {ScoreCells = new List<int>() { 0, 0  } },
-                new Frame {ScoreCells = new List<int>() { 0, 0  } },
-                new Frame {ScoreCells = new List<int>() { 0, 0 } },
-                new Frame {ScoreCells = new List<int>() { 0, 0  } },
-                new Frame {ScoreCells = new List<int>() { 0, 0 } },
-                new Frame {ScoreCells = new List<int>() { 0, 0  } },
-                new Frame {ScoreCells = new List<int>() { 0, 0 } },
-                new Frame {ScoreCells = new List<int>() { 0, 0 } }
+            var frames = new List<List<int>>() {
+                new List<int> {  0, 0 },
+                new List<int> { 0, 0 },
+                new List<int> { 0, 0  },
+                new List<int> { 0, 0  },
+                new List<int> { 0, 0 },
+                new List<int> { 0, 0  },
+                new List<int> { 0, 0 },
+                new List<int> { 0, 0  },
+                new List<int> { 0, 0 },
+                new List<int> { 0, 0 }
             };
 
             return new PlayerGameData
@@ -1651,17 +1584,17 @@ namespace Bowling.Api.Tests
 
         private static PlayerGameData GetFramesFilledExceptOneAllSpares()
         {
-            var frames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 4, 6 } },
-                new Frame {ScoreCells = new List<int>() { 3, 7 } },
-                new Frame {ScoreCells = new List<int>() { 1, 9  } },
-                new Frame {ScoreCells = new List<int>() { 0, 10  } },
-                new Frame {ScoreCells = new List<int>() { 3, 7  } },
-                new Frame {ScoreCells = new List<int>() { 1, 9   } },
-                new Frame {ScoreCells = new List<int>() { 0, 10 } },
-                new Frame {ScoreCells = new List<int>() { 3, 7   } },
-                new Frame {ScoreCells = new List<int>() { 1, 9  } },
-                new Frame {ScoreCells = new List<int>() { 0, 10 } }
+            var frames = new List<List<int>>() {
+                new List<int> {  4, 6 },
+                new List<int> { 3, 7 },
+                new List<int> { 1, 9  },
+                new List<int> { 0, 10  },
+                new List<int> { 3, 7  },
+                new List<int> { 1, 9   },
+                new List<int> { 0, 10 },
+                new List<int> { 3, 7   },
+                new List<int> { 1, 9  },
+                new List<int> { 0, 10 }
             };
 
             return new PlayerGameData
@@ -1674,17 +1607,17 @@ namespace Bowling.Api.Tests
 
         private static PlayerGameData GetFramesFilledExceptOneAllStrikes()
         {
-            var frames = new List<Frame>() {
-                new Frame { ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 10  } },
-                new Frame {ScoreCells = new List<int>() { 10  } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 10  } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 10  } },
-                new Frame {ScoreCells = new List<int>() { 10 } },
-                new Frame {ScoreCells = new List<int>() { 10, 10 } }
+            var frames = new List<List<int>>() {
+                new List<int> {  10 },
+                new List<int> { 10 },
+                new List<int> { 10  },
+                new List<int> { 10  },
+                new List<int> { 10 },
+                new List<int> { 10  },
+                new List<int> { 10 },
+                new List<int> { 10  },
+                new List<int> { 10 },
+                new List<int> { 10, 10 }
             };
 
             return new PlayerGameData
