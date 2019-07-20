@@ -1442,13 +1442,435 @@ namespace Bowling.Api.Tests
             Assert.AreEqual(8, runningTotal[0]);
             Assert.AreEqual(12, runningTotal[1]);
         }
-        /*
+
         [TestMethod]
-        public async Task FoundSpareOneShotBackAndFrameNumResultListEmptyTest()
+        public async Task FoundSpareOneShotBackAndFrameNumSpareFirstFrameTest()
         {
-            var resultList = new List<int>
-            playersHelper.FoundSpareOneShotBackAndFrameNum()
-        } */
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 6 },
+                new List<int> { 4 }
+            };
+
+            var curFrame = 2;
+            var curCell = 1;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsTrue(response.Item1);
+            Assert.IsTrue(response.Item2 == 1);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseTest()
+        {
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 4 },
+                new List<int> { 6, 3 },
+                new List<int> { 5 }
+            };
+
+            var curFrame = 3;
+            var curCell = 1;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsFalse(response.Item1);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseSpareTwoShotsBackTest()
+        {
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 5 },
+                new List<int> { 4, 6 },
+                new List<int> { 5, 4 }
+            };
+
+            var curFrame = 3;
+            var curCell = 2;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsFalse(response.Item1);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseSpareOverlappingFramesTest()
+        {
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 5 },
+                new List<int> { 3, 6 },
+                new List<int> { 4 }
+            };
+
+            var curFrame = 3;
+            var curCell = 1;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsFalse(response.Item1);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumTrueZeroSpare()
+        {
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 5 },
+                new List<int> { 0, 10 },
+                new List<int> { 4 }
+            };
+
+            var curFrame = 3;
+            var curCell = 1;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsTrue(response.Item1);
+            Assert.IsTrue(response.Item2 == 2);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseZeroAndStrikeTest()
+        {
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 5 },
+                new List<int> { 4, 0 },
+                new List<int> { 10 },
+                new List<int> { 5 }
+            };
+
+            var curFrame = 4;
+            var curCell = 1;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsFalse(response.Item1);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseSpareStrikeStrikeTest()
+        {
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 5 },
+                new List<int> { 4, 6 },
+                new List<int> { 10 },
+                new List<int> { 10 }
+            };
+
+            var curFrame = 4;
+            var curCell = 1;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsFalse(response.Item1);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseFromSpareTest()
+        {
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 5 },
+                new List<int> { 4, 6 },
+                new List<int> { 3, 7 },
+            };
+
+            var curFrame = 3;
+            var curCell = 2;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsFalse(response.Item1);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumTrueFromStrikeTest()
+        {
+            var resultList = new List<List<int>>() {
+                new List<int> { 4, 5 },
+                new List<int> { 4, 6 },
+                new List<int> { 10 }
+            };
+
+            var curFrame = 3;
+            var curCell = 1;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsTrue(response.Item1);
+            Assert.IsTrue(response.Item2 == 2);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumTrueOnBonusFrame()
+        {
+            var resultList = AllNonBonusFramesFilledSpareAtEnd().ResultList;
+            resultList.Add(new List<int> { 3, 7, 5 });
+
+            var curFrame = 10;
+            var curCell = 3;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsTrue(response.Item1);
+            Assert.IsTrue(response.Item2 == 10);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseFromBonusFrameCellTwo()
+        {
+            var resultList = AllNonBonusFramesFilledSpareAtEnd().ResultList; //has spare at frame 9
+            resultList.Add(new List<int> { 0, 7});
+
+            var curFrame = 10;
+            var curCell = 2;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsFalse(response.Item1);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseInBonusFrameZeroTenTest()
+        {
+            var resultList = AllNonBonusFramesFilledSpareAtEnd().ResultList; //has spare at frame 9
+            resultList.Add(new List<int> { 0, 10, 10 });
+
+            var curFrame = 10;
+            var curCell = 3;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsTrue(response.Item1);
+            Assert.IsTrue(response.Item2 == 10);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseSpareBeforeInBonusFrameStrikeZeroTest()
+        {
+            var resultList = AllNonBonusFramesFilledSpareAtEnd().ResultList; //has spare at frame 9
+            resultList.Add(new List<int> { 10, 0 });
+
+            var curFrame = 10;
+            var curCell = 2;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsFalse(response.Item1);
+        }
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumFalseInBonusFrameStrikeZeroTest()
+        {
+            var resultList = AllNonBonusFramesFilledSpareAtEnd().ResultList; //has spare at frame 9
+            resultList.Add(new List<int> { 10, 0, 4 });
+
+            var curFrame = 10;
+            var curCell = 3;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsFalse(response.Item1);
+        }        
+
+        [TestMethod]
+        public async Task FoundSpareOneShotBackAndFrameNumTrueFromBonusFrameFirstCellTest()
+        {
+            var resultList = GetFramesFilledExceptOneAllSpares().ResultList;
+            resultList.Add(new List<int> { 5 });
+
+            var curFrame = 10;
+            var curCell = 1;
+
+            var response = playersHelper.FoundSpareOneShotBackAndFrameNum(resultList, curFrame, curCell);
+
+            Assert.IsTrue(response.Item1);
+            Assert.IsTrue(response.Item2 == 9);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareTrueTest()
+        {
+
+            var frame = new List<int> { 4, 6 };
+
+            var hasSpare = playersHelper.FrameHasSpare(frame);
+
+            Assert.IsTrue(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareTrueZeroTenTest()
+        {
+
+            var frame = new List<int> { 0, 10 };
+
+            var hasSpare = playersHelper.FrameHasSpare(frame);
+
+            Assert.IsTrue(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareTrueBonusFrameTest()
+        {
+
+            var frame = new List<int> { 5, 5, 3 };
+
+            var hasSpare = playersHelper.FrameHasSpare(frame);
+
+            Assert.IsTrue(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareFalseTest()
+        {
+
+            var frame = new List<int> { 5, 4 };
+
+            var hasSpare = playersHelper.FrameHasSpare(frame);
+
+            Assert.IsFalse(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareFalseStrikeTest()
+        {
+
+            var frame = new List<int> { 10 };
+
+            var hasSpare = playersHelper.FrameHasSpare(frame);
+
+            Assert.IsFalse(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareFalseBonusFrameTest()
+        {
+
+            var frame = new List<int> { 5, 4, 3 };
+
+            var hasSpare = playersHelper.FrameHasSpare(frame);
+
+            Assert.IsFalse(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareFalseBonusFrameSecondThirdAreTenTest()
+        {
+
+            var frame = new List<int> { 4, 5, 5 };
+
+            var hasSpare = playersHelper.FrameHasSpare(frame);
+
+            Assert.IsFalse(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareFalseFrameNull()
+        {
+
+            var hasSpare = playersHelper.FrameHasSpare(null);
+
+            Assert.IsFalse(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareFalseFrameEmpty()
+        {
+            var frame = new List<int> ();
+
+            var hasSpare = playersHelper.FrameHasSpare(frame);
+
+            Assert.IsFalse(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasSpareFalseFrameOneVal()
+        {
+            var frame = new List<int> { 4 };
+
+            var hasSpare = playersHelper.FrameHasSpare(frame);
+
+            Assert.IsFalse(hasSpare);
+        }
+
+        [TestMethod]
+        public async Task FrameHasStrikeTrue()
+        {
+            var frame = new List<int> { 10 };
+
+            var hasStrike = playersHelper.FrameHasStrike(frame);
+
+            Assert.IsTrue(hasStrike);
+        }
+
+        [TestMethod]
+        public async Task FrameHasStrikeTrueBonusFrameTwoCells()
+        {
+            var frame = new List<int> { 10, 0 };
+
+            var hasStrike = playersHelper.FrameHasStrike(frame);
+
+            Assert.IsTrue(hasStrike);
+        }
+
+        [TestMethod]
+        public async Task FrameHasStrikeTrueBonusFrameFull()
+        {
+            var frame = new List<int> { 10, 0, 3 };
+
+            var hasStrike = playersHelper.FrameHasStrike(frame);
+
+            Assert.IsTrue(hasStrike);
+        }
+
+        [TestMethod]
+        public async Task FrameHasStrikeFalseBonusFrameZeroTenTwoCells()
+        {
+            var frame = new List<int> { 0, 10 };
+
+            var hasStrike = playersHelper.FrameHasStrike(frame);
+
+            Assert.IsFalse(hasStrike);
+        }
+
+        [TestMethod]
+        public async Task FrameHasStrikeFalseBonusFrameZeroTenTen()
+        {
+            var frame = new List<int> { 0, 10, 10 };
+
+            var hasStrike = playersHelper.FrameHasStrike(frame);
+
+            Assert.IsFalse(hasStrike);
+        }
+
+        [TestMethod]
+        public async Task FrameHasStrikeFalseFrameNull()
+        {
+
+            var hasStrike = playersHelper.FrameHasStrike(null);
+
+            Assert.IsFalse(hasStrike);
+        }
+
+        [TestMethod]
+        public async Task FrameHasStrikeFalseFrameEmpty()
+        {
+            var frame = new List<int>();
+
+            var hasStrike = playersHelper.FrameHasStrike(frame);
+
+            Assert.IsFalse(hasStrike);
+        }
+
+        [TestMethod]
+        public async Task FrameHasStrikeFalseFrameOneVal()
+        {
+            var frame = new List<int> { 4 };
+
+            var hasStrike = playersHelper.FrameHasStrike(frame);
+
+            Assert.IsFalse(hasStrike);
+        }
 
         //bonus frame tests
         private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<int> frame)

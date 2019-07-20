@@ -229,6 +229,11 @@ namespace BowlingApi.BusinessLogicHelpers
                 return false;
             }
 
+            if(frame[0] == 10)
+            {
+                return false;
+            }
+
             return frame[0] + frame[1] == 10;
         }
 
@@ -251,9 +256,12 @@ namespace BowlingApi.BusinessLogicHelpers
                 {
                     return new Tuple<bool, int>(true, curFrameNum);
                 }
+                return new Tuple<bool, int>(FrameHasSpare(resultList[frameNumResultIdx]), curFrameNum);
             }
-
-            return new Tuple<bool, int>(FrameHasSpare(resultList[frameNumResultIdx]), curFrameNum); //do we need this?
+            else //cell num is 2, there won't be any spares
+            {
+                return new Tuple<bool, int>(false, -1);
+            }
         }
 
         public Tuple<int, int> GetScoreOneShotBackAndFrameNum(List<List<int>> resultList, int curFrameNum, int curCellNum)
