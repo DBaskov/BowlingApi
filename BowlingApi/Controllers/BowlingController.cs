@@ -129,7 +129,7 @@ namespace BowlingApi.Controllers
             }
         }               
 
-        [HttpDelete("{playerId}")]
+        [HttpDelete("{Id}")]
         public async Task<ActionResult> DeletePlayer(string playerId)
         {
             if (!Guid.TryParse(playerId, out var playerIdGuid))
