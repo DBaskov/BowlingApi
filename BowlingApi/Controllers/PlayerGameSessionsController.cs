@@ -14,11 +14,11 @@ namespace BowlingApi.Controllers
 {
     [Route("api/bowling/v1/player-game-sessions")]
     [ApiController]
-    public class BowlingController : ControllerBase
+    public class PlayerGameSessionsController : ControllerBase
     {
         private readonly IPlayersHelper _playersHelper;
 
-        public BowlingController(IPlayersHelper playersHelper)
+        public PlayerGameSessionsController(IPlayersHelper playersHelper)
         {
             _playersHelper = playersHelper;
         }                
