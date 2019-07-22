@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 namespace BowlingApi.Repositories
 {
     //todo try catch
-    public class PlayersDataMongoRepository : IPlayersDataRepository
+    public class PlayerGameSessionMongoRepository : IPlayerGameSessionsRepository
     {
         public IMongoDBContext _mongoDbContext { get; set; }
 
-        public PlayersDataMongoRepository(IMongoDBContext mongoDbContext)
+        public PlayerGameSessionMongoRepository(IMongoDBContext mongoDbContext)
         {
             _mongoDbContext = mongoDbContext;
         }
 
-        public async Task<bool> AddPlayer(PlayerGameSession player)
+        public async Task<bool> Add(PlayerGameSession player)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace BowlingApi.Repositories
             return result.IsAcknowledged && result.DeletedCount > 0;
         }
 
-        public async Task<bool> DeletePlayer(string playerId)
+        public async Task<bool> Delete(string playerId)
         {
             var filter = Builders<PlayerGameSession>.Filter.Eq(p => p.PlayerGameSessionId, playerId);
 
@@ -75,7 +75,7 @@ namespace BowlingApi.Repositories
         }
 
         //curently only updates score data, also need to double check the updates
-        public async Task<bool> UpdatePlayerData(PlayerGameSession updatedGameData) 
+        public async Task<bool> Update(PlayerGameSession updatedGameData) 
         {
             var filter = Builders<PlayerGameSession>.Filter.Eq(p => p.PlayerGameSessionId, updatedGameData.PlayerGameSessionId);
 
@@ -94,7 +94,7 @@ namespace BowlingApi.Repositories
             }
         }
 
-        public async Task<PlayerGameSession> GetPlayerData(string playerId)
+        public async Task<PlayerGameSession> Get(string playerId)
         {
             var filter = Builders<PlayerGameSession>.Filter.Eq(p => p.PlayerGameSessionId, playerId);
 
@@ -116,7 +116,7 @@ namespace BowlingApi.Repositories
             }            
         }
 
-        public async Task<bool> ReplacePlayerData(PlayerGameSession playerGameDataToReplace)
+        public async Task<bool> Replace(PlayerGameSession playerGameDataToReplace)
         {
             var filter = Builders<PlayerGameSession>.Filter.Eq(p => p.PlayerGameSessionId, playerGameDataToReplace.PlayerGameSessionId);
 

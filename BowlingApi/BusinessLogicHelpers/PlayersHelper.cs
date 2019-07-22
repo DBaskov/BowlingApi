@@ -9,12 +9,12 @@ using BowlingApi.Repository;
 
 namespace BowlingApi.BusinessLogicHelpers
 {
-    public class PlayersHelper : IPlayersHelper
+    public class PlayerGameSessionsHelper : IPlayersHelper
     {
         enum SpecialScores { Spare = 10, Strike = 11}; 
 
-        public readonly IPlayersDataRepository _playersDataService;
-        public PlayersHelper(IPlayersDataRepository playersDataService)
+        public readonly IPlayerGameSessionsRepository _playersDataService;
+        public PlayerGameSessionsHelper(IPlayerGameSessionsRepository playersDataService)
         {
             _playersDataService = playersDataService;
         }
@@ -32,7 +32,7 @@ namespace BowlingApi.BusinessLogicHelpers
                 PlayerName = playerName
             };
 
-            var success = await _playersDataService.AddPlayer(playerGameData);
+            var success = await _playersDataService.Add(playerGameData);
             if (!success)
             {
                 throw new MongoOperationFailException("Mongo 'AddPlayers' operation failed. ");
@@ -43,7 +43,7 @@ namespace BowlingApi.BusinessLogicHelpers
 
         public async Task<bool> DeletePlayerGameData(string playerId)
         {
-            var result = await _playersDataService.DeletePlayer(playerId);
+            var result = await _playersDataService.Delete(playerId);
 
             return result;
         }
@@ -79,7 +79,7 @@ namespace BowlingApi.BusinessLogicHelpers
 
         public async Task<PlayerGameSession> GetPlayerGameData(Guid playerId)
         {
-            var result = await _playersDataService.GetPlayerData(playerId.ToString());
+            var result = await _playersDataService.Get(playerId.ToString());
             return result;
         }
 
@@ -94,7 +94,7 @@ namespace BowlingApi.BusinessLogicHelpers
                 RunningTotalList = playerGameDataIn.RunningTotalList
             };
 
-            var success = await _playersDataService.ReplacePlayerData(playerGameData);
+            var success = await _playersDataService.Replace(playerGameData);
 
             if (!success)
             {
@@ -111,7 +111,7 @@ namespace BowlingApi.BusinessLogicHelpers
 
             ComputeNewScore(score, numPins);
 
-            await _playersDataService.UpdatePlayerData(score); 
+            await _playersDataService.Update(score); 
             return score; 
         }        
 

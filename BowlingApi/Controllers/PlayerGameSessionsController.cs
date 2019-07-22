@@ -93,7 +93,7 @@ namespace BowlingApi.Controllers
             }
             catch(Exception e)
             {
-                Console.WriteLine("Error in {playerId}/calculateNewScore action ", e);
+                Console.WriteLine("Error in {Id}/calculateNewScore action ", e);
                 return StatusCode(500);
             }
         }

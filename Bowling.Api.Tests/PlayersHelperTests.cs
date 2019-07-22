@@ -12,27 +12,27 @@ namespace Bowling.Api.Tests
     [TestClass] //todo flip expected and actual values
     public class PlayersHelperTests
     {
-        private Mock<IPlayersDataRepository> mockPlayersDataService;
-        private PlayersHelper playersHelper;
+        private Mock<IPlayerGameSessionsRepository> mockPlayersDataService;
+        private PlayerGameSessionsHelper playersHelper;
         private readonly Guid PLAYER_ID = Guid.NewGuid();
 
         [TestInitialize]
         public void Initialize()
         {
-            mockPlayersDataService = new Mock<IPlayersDataRepository>(MockBehavior.Strict);
+            mockPlayersDataService = new Mock<IPlayerGameSessionsRepository>(MockBehavior.Strict);
 
             //mockPlayersDataService.Setup(x => x.AddPlayer(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
             // mockPlayersDataService.Setup(x => x.AddPlayers(It.IsAny<List<PlayerGameData>>())).Returns(Task.FromResult(true));
 
-            playersHelper = new PlayersHelper(mockPlayersDataService.Object);
+            playersHelper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
         }
 
         [TestMethod]
         public async Task InstiateAndInsertPlayerGameDataValidTestMethod()
         {
-            mockPlayersDataService.Setup(x => x.DeletePlayer(It.IsAny<string>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Delete(It.IsAny<string>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
 
             var playerDataResult = await helper.DeletePlayerGameData("John");
 
@@ -44,10 +44,10 @@ namespace Bowling.Api.Tests
         [TestMethod] //todo check PLAYER_ID matches on all of them
         public async Task UpdateScoreSingleValueTest()
         {
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(new PlayerGameSession()));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(new PlayerGameSession()));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 4;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -73,10 +73,10 @@ namespace Bowling.Api.Tests
 
             //var playerScoreOld = playerScore;
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 5;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -97,10 +97,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 6;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -116,10 +116,10 @@ namespace Bowling.Api.Tests
         {
             var playerScore = new PlayerGameSession();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 0;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -139,10 +139,10 @@ namespace Bowling.Api.Tests
             //var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 0;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -163,10 +163,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 0;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -187,10 +187,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 6;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -212,10 +212,10 @@ namespace Bowling.Api.Tests
 
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 6;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -239,10 +239,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -266,10 +266,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -291,10 +291,10 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
   
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 0;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -312,10 +312,10 @@ namespace Bowling.Api.Tests
         {
             var playerScore = new PlayerGameSession();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -335,10 +335,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);           
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 4;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -364,10 +364,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 5;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -394,10 +394,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 3;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -428,10 +428,10 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
             ;
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -464,10 +464,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 6;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -494,10 +494,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 6;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -526,10 +526,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 6;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -559,10 +559,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 6;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -590,10 +590,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 0;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -620,10 +620,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 0;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -650,10 +650,10 @@ namespace Bowling.Api.Tests
             var oldPlayerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -671,10 +671,10 @@ namespace Bowling.Api.Tests
         {
             var playerScore = AllNonBonusFramesFilled();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 5;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -689,14 +689,14 @@ namespace Bowling.Api.Tests
         {
             var playerScore = AllNonBonusFramesFilled();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add( new List<int> { 5 });
             playerScore.TotalScore += 5;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 5);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 3;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -718,14 +718,14 @@ namespace Bowling.Api.Tests
         {
             var playerScore = AllNonBonusFramesFilled();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10, 10 });
             playerScore.TotalScore += 20;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10 + 10);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -747,14 +747,14 @@ namespace Bowling.Api.Tests
         {
             var playerScore = AllNonBonusFramesFilled();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 0 });
             playerScore.TotalScore += 0;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8]);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 0;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -770,14 +770,14 @@ namespace Bowling.Api.Tests
         {
             var playerScore = AllNonBonusFramesFilled();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10, 4 });
             playerScore.TotalScore += 14;
             playerScore.RunningTotalList.Add(playerScore.TotalScore);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 6;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -794,14 +794,14 @@ namespace Bowling.Api.Tests
         {
             var playerScore = AllNonBonusFramesFilled();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 4, 6 });
             playerScore.TotalScore += 10;
             playerScore.RunningTotalList.Add(playerScore.TotalScore);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -818,14 +818,14 @@ namespace Bowling.Api.Tests
         {
             var playerScore = AllNonBonusFramesFilled();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 4, 6 });
             playerScore.TotalScore += 10;
             playerScore.RunningTotalList.Add(playerScore.TotalScore);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 5;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -842,14 +842,14 @@ namespace Bowling.Api.Tests
         {
             var playerScore = AllNonBonusFramesFilled();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10, 10 });
             playerScore.TotalScore += 20;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10 + 10);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 5;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -867,14 +867,14 @@ namespace Bowling.Api.Tests
 
             var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10 });
             playerScore.TotalScore += 10;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -891,15 +891,15 @@ namespace Bowling.Api.Tests
 
             var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10, 10 });
             playerScore.TotalScore = 180; //20 for strike in frame before bonus and another for 2 20s
             playerScore.RunningTotalList[8] = 160;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 10);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -917,14 +917,14 @@ namespace Bowling.Api.Tests
 
             var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 4 });
             playerScore.TotalScore += 4;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 4);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 6;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -941,14 +941,14 @@ namespace Bowling.Api.Tests
 
             var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 4 });
             playerScore.TotalScore += 4;
             playerScore.RunningTotalList.Add(playerScore.RunningTotalList[8] + 4);
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 4;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -965,10 +965,10 @@ namespace Bowling.Api.Tests
 
             var playerScore = AllNonBonusFramesFilledTwoStrikesAtEnd();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -985,10 +985,10 @@ namespace Bowling.Api.Tests
 
             var playerScore = AllNonBonusFramesFilledSpareAtEnd();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -1004,10 +1004,10 @@ namespace Bowling.Api.Tests
 
             var playerScore = AllNonBonusFramesFilledSpareAtEnd();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 4;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -1022,10 +1022,10 @@ namespace Bowling.Api.Tests
         {
             var playerScore = GetFramesFilledExceptOneAllZeroes();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 0;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -1040,10 +1040,10 @@ namespace Bowling.Api.Tests
         {
             var playerScore = GetFramesFilledExceptOneAllStrikes();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 10;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
@@ -1058,10 +1058,10 @@ namespace Bowling.Api.Tests
         {
             var playerScore = GetFramesFilledExceptOneAllSpares();
 
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
+            mockPlayersDataService.Setup(x => x.Update(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
-            var helper = new PlayersHelper(mockPlayersDataService.Object);
+            var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
             var numPins = 4;
             var result = await helper.UpdateScore(PLAYER_ID, numPins);
 
