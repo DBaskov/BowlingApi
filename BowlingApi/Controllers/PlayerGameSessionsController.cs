@@ -24,7 +24,7 @@ namespace BowlingApi.Controllers
         }                
 
         [HttpPost("")] //check model state
-        public async Task<ActionResult<PlayerGameSessionOut>> CreatePlayer([FromBody] string playerName)
+        public async Task<ActionResult<PlayerGameSessionOut>> Create([FromBody] string playerName)
         {           
             try
             {
@@ -46,7 +46,7 @@ namespace BowlingApi.Controllers
         }
 
         [HttpPut("{Id}")] //for editing score
-        public async Task<ActionResult> PutPlayerGameData(string Id, [FromBody]PlayerGameDataIn playerGameData) //return new total
+        public async Task<ActionResult> Put(string Id, [FromBody]PlayerGameDataIn playerGameData) //return new total
         {
             try
             {
@@ -99,7 +99,7 @@ namespace BowlingApi.Controllers
         }
         
         [HttpGet("{Id}")] //after score been edited, we would need to fetch again
-        public async Task<ActionResult<PlayerGameSessionOut>> PlayerDataGet(string Id) //return new total
+        public async Task<ActionResult<PlayerGameSessionOut>> Get(string Id) //return new total
         {
             if (!Guid.TryParse(Id, out var playerIdGuid))
             {
@@ -130,7 +130,7 @@ namespace BowlingApi.Controllers
         }               
 
         [HttpDelete("{Id}")]
-        public async Task<ActionResult> DeletePlayer(string playerId)
+        public async Task<ActionResult> Delete(string playerId)
         {
             if (!Guid.TryParse(playerId, out var playerIdGuid))
             {
