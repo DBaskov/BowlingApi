@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace BowlingApi.DTOs
 {
-    public class PlayerGameDataOut
+    public class PlayerGameSessionOut
     {
-        public string PlayerId { get; set; }
+        public string PlayerGameSessionId { get; set; }
         public string PlayerName { get; set; }
         public int TotalScore { get; set; }
 

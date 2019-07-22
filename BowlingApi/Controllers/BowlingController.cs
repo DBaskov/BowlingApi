@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BowlingApi.Controllers
 {
-    [Route("api/bowling/v1/players")]
+    [Route("api/bowling/v1/player-game-sessions")]
     [ApiController]
     public class BowlingController : ControllerBase
     {
@@ -24,14 +24,14 @@ namespace BowlingApi.Controllers
         }                
 
         [HttpPost("")] //check model state
-        public async Task<ActionResult<PlayerGameDataOut>> CreatePlayer([FromBody] string playerName)
+        public async Task<ActionResult<PlayerGameSessionOut>> CreatePlayer([FromBody] string playerName)
         {           
             try
             {
                 var result = await _playersHelper.InstiateAndInsertPlayerGameData(playerName);
-                return StatusCode(201, new PlayerGameDataOut
+                return StatusCode(201, new PlayerGameSessionOut
                 {
-                    PlayerId = result.PlayerId,
+                    PlayerGameSessionId = result.PlayerGameSessionId,
                     PlayerName = result.PlayerName,
                     TotalScore = result.TotalScore,
                     ResultList = result.ResultList,
@@ -45,8 +45,8 @@ namespace BowlingApi.Controllers
             }
         }
 
-        [HttpPut("{playerId}")] //for editing score
-        public async Task<ActionResult> PutPlayerGameData(string playerId, [FromBody]PlayerGameDataIn playerGameData) //return new total
+        [HttpPut("{Id}")] //for editing score
+        public async Task<ActionResult> PutPlayerGameData(string Id, [FromBody]PlayerGameDataIn playerGameData) //return new total
         {
             try
             {
@@ -67,20 +67,20 @@ namespace BowlingApi.Controllers
             }
         }
 
-        [HttpPost("{playerId}/calculateNewScore")] //every time bowling pins are knocked down
-        public async Task<ActionResult<PlayerGameDataOut>> CalculateNewScore(string playerId, [FromBody]int numPins) //return new total
+        [HttpPost("{Id}/calculate-new-score")] //every time bowling pins are knocked down
+        public async Task<ActionResult<PlayerGameSessionOut>> CalculateNewScore(string Id, [FromBody]int numPins) //return new total
         {           
-            if(!Guid.TryParse(playerId, out var playerIdGuid))
+            if(!Guid.TryParse(Id, out var playerIdGuid))
             {
-                return StatusCode(400, "playerId: " + playerId + " is not in proper format");
+                return StatusCode(400, "player game session Id: " + Id + " is not in proper format");
             }
 
             try
             {
                 var result = await _playersHelper.UpdateScore(playerIdGuid, numPins);
-                return Ok(new PlayerGameDataOut
+                return Ok(new PlayerGameSessionOut
                 {
-                    PlayerId = result.PlayerId,
+                    PlayerGameSessionId = result.PlayerGameSessionId,
                     PlayerName = result.PlayerName,
                     TotalScore = result.TotalScore,
                     ResultList = result.ResultList,
@@ -98,20 +98,20 @@ namespace BowlingApi.Controllers
             }
         }
         
-        [HttpGet("{playerId}")] //after score been edited, we would need to fetch again
-        public async Task<ActionResult<PlayerGameDataOut>> PlayerDataGet(string playerId) //return new total
+        [HttpGet("{Id}")] //after score been edited, we would need to fetch again
+        public async Task<ActionResult<PlayerGameSessionOut>> PlayerDataGet(string Id) //return new total
         {
-            if (!Guid.TryParse(playerId, out var playerIdGuid))
+            if (!Guid.TryParse(Id, out var playerIdGuid))
             {
-                return StatusCode(400, "playerId: " + playerId + " is not in proper format");
+                return StatusCode(400, "player game session: " + Id + " is not in proper format");
             }
 
             try
             {
                 var result = await _playersHelper.GetPlayerGameData(playerIdGuid);
-                return Ok(new PlayerGameDataOut
+                return Ok(new PlayerGameSessionOut
                 {
-                    PlayerId = result.PlayerId,
+                    PlayerGameSessionId = result.PlayerGameSessionId,
                     PlayerName = result.PlayerName,
                     TotalScore = result.TotalScore,
                     ResultList = result.ResultList,
@@ -134,7 +134,7 @@ namespace BowlingApi.Controllers
         {
             if (!Guid.TryParse(playerId, out var playerIdGuid))
             {
-                return StatusCode(400, "playerId: " + playerId + " is not in proper format");
+                return StatusCode(400, "player game session: " + playerId + " is not in proper format");
             }
             try
             {

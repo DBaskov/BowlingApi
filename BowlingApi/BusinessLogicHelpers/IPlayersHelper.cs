@@ -9,17 +9,17 @@ namespace BowlingApi.BusinessLogicHelpers
 {
     public interface IPlayersHelper
     {
-        Task<List<PlayerGameData>> InstatiateBulkPlayerGameData(List<string> playerNames);
+        Task<List<PlayerGameSession>> InstatiateBulkPlayerGameData(List<string> playerNames);
 
-        Task<PlayerGameData> GetPlayerGameData(Guid playerId);
+        Task<PlayerGameSession> GetPlayerGameData(Guid playerId);
 
-        Task<PlayerGameData> InstiateAndInsertPlayerGameData(string playerName);
+        Task<PlayerGameSession> InstiateAndInsertPlayerGameData(string playerName);
 
         Task<bool> ReplacePlayerGameData(PlayerGameDataIn playerGameData);
 
-        Task<PlayerGameData> UpdateScore(Guid playerId, int numPins);
+        Task<PlayerGameSession> UpdateScore(Guid playerId, int numPins);
 
-        Task<List<PlayerGameData>> ChangeFrameScore(string playerId, int frameNumber, int newScore);
+        Task<List<PlayerGameSession>> ChangeFrameScore(string playerId, int frameNumber, int newScore);
         
         Task<bool> DeleteBulkPlayerGameData(List<string> playerIds);
 

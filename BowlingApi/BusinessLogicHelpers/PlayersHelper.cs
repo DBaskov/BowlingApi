@@ -19,16 +19,16 @@ namespace BowlingApi.BusinessLogicHelpers
             _playersDataService = playersDataService;
         }
 
-        public async Task<List<PlayerGameData>> ChangeFrameScore(string playerId, int frameNumber, int newScore)
+        public async Task<List<PlayerGameSession>> ChangeFrameScore(string playerId, int frameNumber, int newScore)
         {
             throw new NotImplementedException();
         }
         
-        public async Task<PlayerGameData> InstiateAndInsertPlayerGameData(string playerName)
+        public async Task<PlayerGameSession> InstiateAndInsertPlayerGameData(string playerName)
         {
-            var playerGameData = new PlayerGameData
+            var playerGameData = new PlayerGameSession
             {
-                PlayerId = Guid.NewGuid().ToString(),
+                PlayerGameSessionId = Guid.NewGuid().ToString(),
                 PlayerName = playerName
             };
 
@@ -53,17 +53,17 @@ namespace BowlingApi.BusinessLogicHelpers
             throw new NotImplementedException();
         }
 
-        public async Task<List<PlayerGameData>> InstatiateBulkPlayerGameData(List<string> playerNames)
+        public async Task<List<PlayerGameSession>> InstatiateBulkPlayerGameData(List<string> playerNames)
         {
-            var playersList = new List<PlayerGameData>();
+            var playersList = new List<PlayerGameSession>();
 
             var matchId = Guid.NewGuid().ToString();
             foreach (var playerName in playerNames)
             {
                 playersList.Add(
-                    new PlayerGameData
+                    new PlayerGameSession
                     {
-                        PlayerId = Guid.NewGuid().ToString(),
+                        PlayerGameSessionId = Guid.NewGuid().ToString(),
                         PlayerName = playerName
                     });
             }
@@ -77,7 +77,7 @@ namespace BowlingApi.BusinessLogicHelpers
             return playersList;
         }
 
-        public async Task<PlayerGameData> GetPlayerGameData(Guid playerId)
+        public async Task<PlayerGameSession> GetPlayerGameData(Guid playerId)
         {
             var result = await _playersDataService.GetPlayerData(playerId.ToString());
             return result;
@@ -85,9 +85,9 @@ namespace BowlingApi.BusinessLogicHelpers
 
         public async Task<bool> ReplacePlayerGameData(PlayerGameDataIn playerGameDataIn)
         {
-            var playerGameData = new PlayerGameData
+            var playerGameData = new PlayerGameSession
             {
-                PlayerId = playerGameDataIn.PlayerId,
+                PlayerGameSessionId = playerGameDataIn.PlayerId,
                 PlayerName = playerGameDataIn.PlayerName,
                 TotalScore = playerGameDataIn.TotalScore,
                 ResultList = playerGameDataIn.ResultList,
@@ -104,7 +104,7 @@ namespace BowlingApi.BusinessLogicHelpers
             return success;
         }
 
-        public async Task<PlayerGameData> UpdateScore(Guid playerId, int numPins)
+        public async Task<PlayerGameSession> UpdateScore(Guid playerId, int numPins)
         {
                            
             var score = await GetPlayerGameData(playerId);
@@ -115,7 +115,7 @@ namespace BowlingApi.BusinessLogicHelpers
             return score; 
         }        
 
-        public void ComputeNewScore(PlayerGameData playerScore, int numPins)
+        public void ComputeNewScore(PlayerGameSession playerScore, int numPins)
         {
             List<int> frame = null;
             var cellNum = 0;
@@ -139,7 +139,7 @@ namespace BowlingApi.BusinessLogicHelpers
             HandleStrikesAndSpares(playerScore, frameNum, cellNum, numPins);
         }
 
-        public int UpdateRunningTotalAndReturnNewCellNum(List<int> runningTotal, int cellNum, PlayerGameData playerGameData, List<int> curFrame)
+        public int UpdateRunningTotalAndReturnNewCellNum(List<int> runningTotal, int cellNum, PlayerGameSession playerGameData, List<int> curFrame)
         {
             //we expected Frame to not be null if cellNum = 1;
             if (cellNum == 1 && !FrameHasStrike(curFrame) || playerGameData.ResultList.Count == 10) //also logic for 10
@@ -317,7 +317,7 @@ namespace BowlingApi.BusinessLogicHelpers
             }
         }
 
-        public bool HandleStrike(PlayerGameData playerScore, int frameNum, int cellNum, int numPins)
+        public bool HandleStrike(PlayerGameSession playerScore, int frameNum, int cellNum, int numPins)
         {
             var resultList = playerScore.ResultList;
             if (frameNum > 1)
@@ -344,7 +344,7 @@ namespace BowlingApi.BusinessLogicHelpers
             return false;
         }
 
-        public bool HandleSpare(PlayerGameData playerScore, int frameNum, int cellNum, int numPins)
+        public bool HandleSpare(PlayerGameSession playerScore, int frameNum, int cellNum, int numPins)
         {
             var resultList = playerScore.ResultList;
             if (frameNum > 1)
@@ -363,7 +363,7 @@ namespace BowlingApi.BusinessLogicHelpers
             return false;
         }
 
-        private bool HandleStrikesAndSpares(PlayerGameData playerScore, int frameNum, int cellNum, int numPins)
+        private bool HandleStrikesAndSpares(PlayerGameSession playerScore, int frameNum, int cellNum, int numPins)
         {
 
             return HandleStrike(playerScore, frameNum, cellNum, numPins)

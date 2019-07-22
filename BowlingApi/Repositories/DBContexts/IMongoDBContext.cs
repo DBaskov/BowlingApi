@@ -11,7 +11,7 @@ namespace BowlingApi.DBContexts
     {
         IMongoDatabase Database { get; }
 
-        IMongoCollection<PlayerGameData> PlayersMongoCollection { get; }
+        IMongoCollection<PlayerGameSession> PlayersMongoCollection { get; }
 
         Task<bool> ConnectionOk();
     }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace BowlingApi.Repositories.Models
 {
     [BsonIgnoreExtraElements]
-    public class PlayerGameData
+    public class PlayerGameSession
     {
-        public string PlayerId { get; set; }
+        public string PlayerGameSessionId { get; set; }
 
         public string PlayerName { get; set; } = "";
 

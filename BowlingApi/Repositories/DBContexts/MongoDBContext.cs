@@ -12,13 +12,13 @@ namespace BowlingApi.DBContexts
     public class MongoDBContext : IMongoDBContext
     {
         public readonly IMongoDatabase _database;
-        public readonly IMongoCollection<PlayerGameData> _playersCollection;
+        public readonly IMongoCollection<PlayerGameSession> _playersCollection;
 
         public MongoDBContext(IPlayersMongoDbSetings mongoDbSettings)
         {
             var client = GetDatabaseClient(mongoDbSettings);
             _database = client.GetDatabase(mongoDbSettings.DatabaseName);
-            _playersCollection = _database.GetCollection<PlayerGameData>(mongoDbSettings.PlayersCollectionName);
+            _playersCollection = _database.GetCollection<PlayerGameSession>(mongoDbSettings.PlayersCollectionName);
         }
 
         private MongoClient GetDatabaseClient(IPlayersMongoDbSetings mongoDbSettings)
@@ -38,7 +38,7 @@ namespace BowlingApi.DBContexts
 
         public IMongoDatabase Database => _database;
 
-        public IMongoCollection<PlayerGameData> PlayersMongoCollection => _playersCollection;
+        public IMongoCollection<PlayerGameSession> PlayersMongoCollection => _playersCollection;
 
         public async Task<bool> ConnectionOk ()
         {

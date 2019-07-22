@@ -8,18 +8,18 @@ namespace BowlingApi.Repository
 {
     public interface IPlayersDataRepository
     {
-        Task<bool> AddPlayers(List<PlayerGameData> players);
+        Task<bool> AddPlayers(List<PlayerGameSession> players);
 
-        Task<bool> AddPlayer(PlayerGameData player);
+        Task<bool> AddPlayer(PlayerGameSession player);
 
         Task<bool> DeletePlayers(List<string> playerIds);
 
         Task<bool> DeletePlayer(string playerId);
 
-        Task<bool> UpdatePlayerData(PlayerGameData updatedGameData);
+        Task<bool> UpdatePlayerData(PlayerGameSession updatedGameData);
 
-        Task<bool> ReplacePlayerData(PlayerGameData playerGameDataToReplace);
+        Task<bool> ReplacePlayerData(PlayerGameSession playerGameDataToReplace);
 
-        Task<PlayerGameData> GetPlayerData(string playerId);
+        Task<PlayerGameSession> GetPlayerData(string playerId);
     }
 }

@@ -20,7 +20,7 @@ namespace BowlingApi.Repositories
             _mongoDbContext = mongoDbContext;
         }
 
-        public async Task<bool> AddPlayer(PlayerGameData player)
+        public async Task<bool> AddPlayer(PlayerGameSession player)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace BowlingApi.Repositories
         }
 
         //think if you want to return whole playerGameData object
-        public async Task<bool> AddPlayers(List<PlayerGameData> players)
+        public async Task<bool> AddPlayers(List<PlayerGameSession> players)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace BowlingApi.Repositories
         public async Task<bool> DeletePlayers(List<string> playerIds)
         {
 
-            var filter = Builders<PlayerGameData>.Filter.In(p => p.PlayerId, playerIds);
+            var filter = Builders<PlayerGameSession>.Filter.In(p => p.PlayerGameSessionId, playerIds);
 
             var result = await _mongoDbContext.PlayersMongoCollection.DeleteManyAsync(filter);
 
@@ -61,7 +61,7 @@ namespace BowlingApi.Repositories
 
         public async Task<bool> DeletePlayer(string playerId)
         {
-            var filter = Builders<PlayerGameData>.Filter.Eq(p => p.PlayerId, playerId);
+            var filter = Builders<PlayerGameSession>.Filter.Eq(p => p.PlayerGameSessionId, playerId);
 
             try
             {
@@ -75,11 +75,11 @@ namespace BowlingApi.Repositories
         }
 
         //curently only updates score data, also need to double check the updates
-        public async Task<bool> UpdatePlayerData(PlayerGameData updatedGameData) 
+        public async Task<bool> UpdatePlayerData(PlayerGameSession updatedGameData) 
         {
-            var filter = Builders<PlayerGameData>.Filter.Eq(p => p.PlayerId, updatedGameData.PlayerId);
+            var filter = Builders<PlayerGameSession>.Filter.Eq(p => p.PlayerGameSessionId, updatedGameData.PlayerGameSessionId);
 
-            var updateDef = Builders<PlayerGameData>.Update.
+            var updateDef = Builders<PlayerGameSession>.Update.
                 Set(p => p.TotalScore, updatedGameData.TotalScore).
                 Set(p => p.ResultList, updatedGameData.ResultList).
                 Set(p => p.RunningTotalList, updatedGameData.RunningTotalList);
@@ -94,9 +94,9 @@ namespace BowlingApi.Repositories
             }
         }
 
-        public async Task<PlayerGameData> GetPlayerData(string playerId)
+        public async Task<PlayerGameSession> GetPlayerData(string playerId)
         {
-            var filter = Builders<PlayerGameData>.Filter.Eq(p => p.PlayerId, playerId);
+            var filter = Builders<PlayerGameSession>.Filter.Eq(p => p.PlayerGameSessionId, playerId);
 
             try
             {
@@ -116,9 +116,9 @@ namespace BowlingApi.Repositories
             }            
         }
 
-        public async Task<bool> ReplacePlayerData(PlayerGameData playerGameDataToReplace)
+        public async Task<bool> ReplacePlayerData(PlayerGameSession playerGameDataToReplace)
         {
-            var filter = Builders<PlayerGameData>.Filter.Eq(p => p.PlayerId, playerGameDataToReplace.PlayerId);
+            var filter = Builders<PlayerGameSession>.Filter.Eq(p => p.PlayerGameSessionId, playerGameDataToReplace.PlayerGameSessionId);
 
             try
             {

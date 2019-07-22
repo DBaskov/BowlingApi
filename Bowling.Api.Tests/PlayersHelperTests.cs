@@ -44,8 +44,8 @@ namespace Bowling.Api.Tests
         [TestMethod] //todo check PLAYER_ID matches on all of them
         public async Task UpdateScoreSingleValueTest()
         {
-            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(new PlayerGameData()));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(new PlayerGameSession()));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 4;
@@ -59,7 +59,7 @@ namespace Bowling.Api.Tests
         public async Task UpdateScoreSecondValueTest()
         {
 
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 4;
             var oldRunningTotalList = new List<int> { 4 };
             var oldFrame = new List<int>() { 4 };
@@ -74,7 +74,7 @@ namespace Bowling.Api.Tests
             //var playerScoreOld = playerScore;
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 5;
@@ -89,7 +89,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreThirdValueTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 9;
             var oldRunningTotalList = new List<int> { 9 };
             var oldFrame = new List<int>() { 4, 5 };
@@ -98,7 +98,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 6;
@@ -114,10 +114,10 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreMissFirstShotTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 0;
@@ -131,7 +131,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreMissBothFirstShotsTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 0;
             var oldRunningTotalList = new List<int> { 0 };
             var oldFrame = new List<int>() { 0 };
@@ -140,7 +140,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 0;
@@ -155,7 +155,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreMissSecondShotTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 4;
             var oldRunningTotalList = new List<int> { 4 };
             var oldFrame = new List<int>() { 4 };
@@ -164,7 +164,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 0;
@@ -179,7 +179,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreSpareTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 4;
             var oldRunningTotalList = new List<int> { 4 };
             var oldFrame = new List<int>() { 4 };
@@ -188,7 +188,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 6;
@@ -203,7 +203,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreShotAfterSpareTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10 };
             var oldFrame = new List<int>() { 4, 6 };
@@ -213,7 +213,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 6;
@@ -231,7 +231,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreStrikeAfterSpareTest() //same issue
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10 };
             var oldFrame = new List<int>() { 4, 6 };
@@ -240,7 +240,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 10;
@@ -258,7 +258,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreSpareAfterMissTest()
         {
-            var playerScore = new PlayerGameData();     //todo need to tell decide on how to instatiate ResultList or specify the frame num via Api 
+            var playerScore = new PlayerGameSession();     //todo need to tell decide on how to instatiate ResultList or specify the frame num via Api 
             var oldTotalScore = 0;
             var oldRunningTotalList = new List<int> { 0 };
             var oldFrame = new List<int>() { 0 };
@@ -267,7 +267,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 10;
@@ -282,7 +282,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreMissAfterSpareTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10 };
             var oldFrame = new List<int>() { 4, 6 };
@@ -292,7 +292,7 @@ namespace Bowling.Api.Tests
   
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 0;
@@ -310,10 +310,10 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreStrikeTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 10;
@@ -327,7 +327,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreShotAfterStrikeTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10 };
             var oldFrame = new List<int>() { 10 };
@@ -336,7 +336,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrame);           
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 4;
@@ -353,7 +353,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreSecondShotAfterStrikeTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 14;
             var oldRunningTotalList = new List<int> { 10, 14 };
             var oldFrames = new List<List<int>>() {
@@ -365,7 +365,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 5;
@@ -383,7 +383,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreThirdShotAfterStrikeTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 28;
             var oldRunningTotalList = new List<int> { 19, 28 };           
             var oldFrames = new List<List<int>>() {
@@ -395,7 +395,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 3;
@@ -415,7 +415,7 @@ namespace Bowling.Api.Tests
         [TestMethod] //failing because logic is going off from new -1 created not the 10
         public async Task UpdateScoreSecondInRowStrikeTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10 };
             //var oldFrames = new List<List<int>>() {
@@ -429,7 +429,7 @@ namespace Bowling.Api.Tests
             ;
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 10;
@@ -453,7 +453,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreStrikeSpareTest() //look more into this error see how unique it is
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 14;
             var oldRunningTotalList = new List<int> { 10, 14 };            
             var oldFrames = new List<List<int>>() {
@@ -465,7 +465,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 6;
@@ -483,7 +483,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreStrikeSpareRegularShotTest() //look more into this error see how unique it is
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 30;
             var oldRunningTotalList = new List<int> { 20, 30 };            
             var oldFrames = new List<List<int>>() {
@@ -495,7 +495,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 6;
@@ -515,7 +515,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreStrikeStrikeRegularShotTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 20;
             var oldRunningTotalList = new List<int> { 10, 20 };            
             var oldFrames = new List<List<int>>() {
@@ -527,7 +527,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 6;
@@ -547,7 +547,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreStrikeMissRegularShotTest()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10, 10 };
             
@@ -560,7 +560,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 6;
@@ -578,7 +578,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreStrikeRegularShotMiss()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 14;
             var oldRunningTotalList = new List<int> { 10, 14 };
            
@@ -591,7 +591,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 0;
@@ -609,7 +609,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreStrikeMissMiss()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10, 10 };            
             var oldFrames = new List<List<int>>() {
@@ -621,7 +621,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 0;
@@ -639,7 +639,7 @@ namespace Bowling.Api.Tests
         [TestMethod]
         public async Task UpdateScoreStrikeMissSpare()
         {
-            var playerScore = new PlayerGameData();
+            var playerScore = new PlayerGameSession();
             var oldTotalScore = 10;
             var oldRunningTotalList = new List<int> { 10, 10 };            
             var oldFrames = new List<List<int>>() {
@@ -651,7 +651,7 @@ namespace Bowling.Api.Tests
             playerScore = CreatePlayerData(oldTotalScore, oldRunningTotalList, oldFrames);
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 10;
@@ -672,7 +672,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilled();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 5;
@@ -690,7 +690,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilled();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add( new List<int> { 5 });
             playerScore.TotalScore += 5;
@@ -719,7 +719,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilled();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10, 10 });
             playerScore.TotalScore += 20;
@@ -748,7 +748,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilled();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 0 });
             playerScore.TotalScore += 0;
@@ -771,7 +771,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilled();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10, 4 });
             playerScore.TotalScore += 14;
@@ -795,7 +795,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilled();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 4, 6 });
             playerScore.TotalScore += 10;
@@ -819,7 +819,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilled();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 4, 6 });
             playerScore.TotalScore += 10;
@@ -843,7 +843,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilled();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10, 10 });
             playerScore.TotalScore += 20;
@@ -868,7 +868,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10 });
             playerScore.TotalScore += 10;
@@ -892,7 +892,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 10, 10 });
             playerScore.TotalScore = 180; //20 for strike in frame before bonus and another for 2 20s
@@ -918,7 +918,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 4 });
             playerScore.TotalScore += 4;
@@ -942,7 +942,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilledStrikeAtEnd();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             playerScore.ResultList.Add(new List<int> { 4 });
             playerScore.TotalScore += 4;
@@ -966,7 +966,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilledTwoStrikesAtEnd();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 10;
@@ -986,7 +986,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilledSpareAtEnd();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 10;
@@ -1005,7 +1005,7 @@ namespace Bowling.Api.Tests
             var playerScore = AllNonBonusFramesFilledSpareAtEnd();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 4;
@@ -1023,7 +1023,7 @@ namespace Bowling.Api.Tests
             var playerScore = GetFramesFilledExceptOneAllZeroes();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 0;
@@ -1041,7 +1041,7 @@ namespace Bowling.Api.Tests
             var playerScore = GetFramesFilledExceptOneAllStrikes();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 10;
@@ -1059,7 +1059,7 @@ namespace Bowling.Api.Tests
             var playerScore = GetFramesFilledExceptOneAllSpares();
 
             mockPlayersDataService.Setup(x => x.GetPlayerData(It.IsAny<string>())).Returns(Task.FromResult(playerScore));
-            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameData>())).Returns(Task.FromResult(true));
+            mockPlayersDataService.Setup(x => x.UpdatePlayerData(It.IsAny<PlayerGameSession>())).Returns(Task.FromResult(true));
 
             var helper = new PlayersHelper(mockPlayersDataService.Object);
             var numPins = 4;
@@ -1873,9 +1873,9 @@ namespace Bowling.Api.Tests
         }
 
         //bonus frame tests
-        private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<int> frame)
+        private static PlayerGameSession CreatePlayerData(int totalScore, List<int> runningTotal, List<int> frame)
         {
-            return new PlayerGameData
+            return new PlayerGameSession
             {
                 TotalScore = totalScore,
                 RunningTotalList = runningTotal,
@@ -1883,9 +1883,9 @@ namespace Bowling.Api.Tests
             };
         }
 
-        private static PlayerGameData CreatePlayerData(int totalScore, List<int> runningTotal, List<List<int>> frames)
+        private static PlayerGameSession CreatePlayerData(int totalScore, List<int> runningTotal, List<List<int>> frames)
         {
-            return new PlayerGameData
+            return new PlayerGameSession
             {
                 TotalScore = totalScore,
                 RunningTotalList = runningTotal,
@@ -1893,7 +1893,7 @@ namespace Bowling.Api.Tests
             };
         }
 
-        private static PlayerGameData AllNonBonusFramesFilled()
+        private static PlayerGameSession AllNonBonusFramesFilled()
         {
             var frames = new List<List<int>>() {
                 new List<int> {  10 },
@@ -1907,7 +1907,7 @@ namespace Bowling.Api.Tests
                 new List<int> { 2, 5 }
             };
 
-            return new PlayerGameData
+            return new PlayerGameSession
             {
                 TotalScore = 137,
                 RunningTotalList = new List<int> { 20, 35, 44, 64, 84, 104, 122, 130, 137 },
@@ -1915,7 +1915,7 @@ namespace Bowling.Api.Tests
             };
         }
 
-        private static PlayerGameData AllNonBonusFramesFilledStrikeAtEnd()
+        private static PlayerGameSession AllNonBonusFramesFilledStrikeAtEnd()
         {
             var frames = new List<List<int>>() {
                 new List<int> {  10 },
@@ -1929,7 +1929,7 @@ namespace Bowling.Api.Tests
                 new List<int> { 10 }
             };
 
-            return new PlayerGameData
+            return new PlayerGameSession
             {
                 TotalScore = 140,
                 RunningTotalList = new List<int> { 20, 35, 44, 64, 84, 104, 122, 130, 140 },
@@ -1937,7 +1937,7 @@ namespace Bowling.Api.Tests
             };
         }
 
-        private static PlayerGameData AllNonBonusFramesFilledTwoStrikesAtEnd()
+        private static PlayerGameSession AllNonBonusFramesFilledTwoStrikesAtEnd()
         {
             var frames = new List<List<int>>() {
                 new List<int> {  10 },
@@ -1951,7 +1951,7 @@ namespace Bowling.Api.Tests
                 new List<int> { 10 }
             };
 
-            return new PlayerGameData
+            return new PlayerGameSession
             {
                 TotalScore = 154,
                 RunningTotalList = new List<int> { 20, 35, 44, 64, 84, 104, 134, 144, 154 },
@@ -1959,7 +1959,7 @@ namespace Bowling.Api.Tests
             };
         }
 
-        private static PlayerGameData AllNonBonusFramesFilledSpareAtEnd()
+        private static PlayerGameSession AllNonBonusFramesFilledSpareAtEnd()
         {
             var frames = new List<List<int>>() {
                 new List<int> {  10 },
@@ -1973,7 +1973,7 @@ namespace Bowling.Api.Tests
                 new List<int> { 4, 6 }
             };
 
-            return new PlayerGameData
+            return new PlayerGameSession
             {
                 TotalScore = 140,
                 RunningTotalList = new List<int> { 20, 35, 44, 64, 84, 104, 122, 130, 140 },
@@ -1981,7 +1981,7 @@ namespace Bowling.Api.Tests
             };
         }
 
-        private static PlayerGameData GetFramesFilledExceptOneAllZeroes()
+        private static PlayerGameSession GetFramesFilledExceptOneAllZeroes()
         {
             var frames = new List<List<int>>() {
                 new List<int> {  0, 0 },
@@ -1996,7 +1996,7 @@ namespace Bowling.Api.Tests
                 new List<int> { 0, 0 }
             };
 
-            return new PlayerGameData
+            return new PlayerGameSession
             {
                 TotalScore = 0,
                 RunningTotalList = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -2004,7 +2004,7 @@ namespace Bowling.Api.Tests
             };
         }
 
-        private static PlayerGameData GetFramesFilledExceptOneAllSpares()
+        private static PlayerGameSession GetFramesFilledExceptOneAllSpares()
         {
             var frames = new List<List<int>>() {
                 new List<int> {  4, 6 },
@@ -2019,7 +2019,7 @@ namespace Bowling.Api.Tests
                 new List<int> { 0, 10 }
             };
 
-            return new PlayerGameData
+            return new PlayerGameSession
             {
                 TotalScore = 112,
                 RunningTotalList = new List<int> { 13, 24, 34, 47, 58, 68, 81, 92, 102, 112 },
@@ -2027,7 +2027,7 @@ namespace Bowling.Api.Tests
             };
         }
 
-        private static PlayerGameData GetFramesFilledExceptOneAllStrikes()
+        private static PlayerGameSession GetFramesFilledExceptOneAllStrikes()
         {
             var frames = new List<List<int>>() {
                 new List<int> {  10 },
@@ -2042,7 +2042,7 @@ namespace Bowling.Api.Tests
                 new List<int> { 10, 10 }
             };
 
-            return new PlayerGameData
+            return new PlayerGameSession
             {
                 TotalScore = 290,
                 RunningTotalList = new List<int> { 30, 60, 90, 120, 150, 180, 210, 240, 270, 290 },
