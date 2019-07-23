@@ -9,7 +9,7 @@ using BowlingApi.Repository;
 
 namespace BowlingApi.BusinessLogicHelpers
 {
-    public class PlayerGameSessionsHelper : IPlayersHelper
+    public class PlayerGameSessionsHelper : IPlayerGameSessionsHelper
     {
         enum SpecialScores { Spare = 10, Strike = 11}; 
 

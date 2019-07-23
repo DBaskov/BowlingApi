@@ -35,7 +35,7 @@ namespace BowlingApi
             services.AddSingleton<IPlayersMongoDbSetings>(s => s.GetRequiredService<IOptions<PlayersMongoDbSetings>>().Value);
             services.TryAddSingleton<IMongoDBContext, MongoDBContext>();
             services.TryAddSingleton<IPlayerGameSessionsRepository, PlayerGameSessionMongoRepository>();
-            services.TryAddSingleton<IPlayersHelper, PlayerGameSessionsHelper>();
+            services.TryAddSingleton<IPlayerGameSessionsHelper, PlayerGameSessionsHelper>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

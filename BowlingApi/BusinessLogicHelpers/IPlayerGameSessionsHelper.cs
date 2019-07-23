@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BowlingApi.BusinessLogicHelpers
 {
-    public interface IPlayersHelper
+    public interface IPlayerGameSessionsHelper
     {
         Task<List<PlayerGameSession>> InstatiateBulkPlayerGameData(List<string> playerNames);
 

@@ -16,9 +16,9 @@ namespace BowlingApi.Controllers
     [ApiController]
     public class PlayerGameSessionsController : ControllerBase
     {
-        private readonly IPlayersHelper _playersHelper;
+        private readonly IPlayerGameSessionsHelper _playersHelper;
 
-        public PlayerGameSessionsController(IPlayersHelper playersHelper)
+        public PlayerGameSessionsController(IPlayerGameSessionsHelper playersHelper)
         {
             _playersHelper = playersHelper;
         }                
