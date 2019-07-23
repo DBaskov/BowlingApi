@@ -18,7 +18,7 @@ Used to get player's current game session
 DELETE: api/bowling/v1/player-game-sessions/{Id}
 Deletes player's game session resouce, coinsides with when player leaves bowling alley or finishes the game. 
 
-PUT: api/bowling/v1/player-game-sessions/{Id}
+PUT: api/bowling/v1/player-game-sessions/{Id} [PlayerGameSession replacement] (send json representation of the model)
 Replaces player game session resource, which can be used when player starts a new game (reset score to 0s)
 
 Player Game Session resource model looks like this:
@@ -45,5 +45,7 @@ To run the API, you need to have .NET Core SDK 2.2 installed (can run on Linux o
 https://docs.microsoft.com/en-us/dotnet/core/sdk
 
 and also install MongoDB and run it locally: https://docs.mongodb.com/manual/installation/#mongodb-community-edition-installation-tutorials  You can use BowlingApi/BowlingApi/appsettings.Development.json file connection settings. 
+
+BowlingApi/Properties/launchSettings.json will contain settings for running the API on your local, which includes portnumber of the application.
 
 You can also install Visual Studio 2019 IDE, where you can build and run the API and the unit tests (alternatively you can use .net core cli)
