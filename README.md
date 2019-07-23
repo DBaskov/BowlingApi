@@ -1,4 +1,7 @@
 # BowlingApi
+
+Description:
+
 This is a RESTful API that is meant to display player's score throughout the game on the display screen. The Data Model is organized
 in a way of being able to track player score during game session, and the resource is under /player-game-sessions. The API has 5 calls:
 
@@ -34,3 +37,13 @@ An Example of how API would be used in a bolwing Alley: Group of 4 players/indiv
 The UI calls POST api/bowling/v1/player-game-sessions 4 times with each player's name, and gets their ID's back. During each player's turn, the bowling system will call the API with POST: api/bowling/v1/player-game-sessions/{Id}/calculate-new-score [int numberOfPins] call to calculate player's
 score based on number of pins knocked down, and as result will get new player game session (new score data) in response. After last player completed scoring, the bowling system will call DELETE: api/bowling/v1/player-game-sessions/{Id} endpoint for each player's ID if they are done playing or 
 call PUT: api/bowling/v1/player-game-sessions/{Id} to reset everyones score to zeros, and start a new game using their same ids. 
+
+Reference for scoring in Bowling: https://www.liveabout.com/bowling-scoring-420895
+
+Running the project:
+To run the API, you need to have .NET Core SDK 2.2 installed (can run on Linux or Windows, etc):
+https://docs.microsoft.com/en-us/dotnet/core/sdk
+
+and also install MongoDB and run it locally: https://docs.mongodb.com/manual/installation/#mongodb-community-edition-installation-tutorials  You can use BowlingApi/BowlingApi/appsettings.Development.json file connection settings. 
+
+You can also install Visual Studio 2019 IDE, where you can build and run the API and the unit tests (alternatively you can use .net core cli)
