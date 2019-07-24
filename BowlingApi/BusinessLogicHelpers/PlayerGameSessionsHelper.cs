@@ -120,7 +120,8 @@ namespace BowlingApi.BusinessLogicHelpers
             UpdateTotal(playerScore, numPins);
             UpdateRunningTotal(playerScore.RunningTotalList, playerScore);
             UpdateResultList(playerScore.ResultList, numPins);           
-            HandleStrikesAndSpares(playerScore, numPins);
+            HandleStrike(playerScore, numPins);
+            HandleSpare(playerScore, numPins);
         }
 
         public void UpdateTotal(PlayerGameSession playerScore, int numPins)
@@ -284,13 +285,13 @@ namespace BowlingApi.BusinessLogicHelpers
                 frameNumResultIdx -= 1;               
                 return new Tuple<bool, int>(FrameHasSpare(resultList[frameNumResultIdx]), curFrameNum - 1);
             }
-            else if(curFrameNum == 10) //handle bonus frame
+            else if(curFrameNum == 10 && curCellNum == 3) //handle bonus frame
             {               
                 if(FrameHasSpare(resultList[frameNumResultIdx])) //curFrameNum == 3
                 {
                     return new Tuple<bool, int>(true, curFrameNum);
                 }
-                return new Tuple<bool, int>(FrameHasSpare(resultList[frameNumResultIdx]), curFrameNum);
+                return new Tuple<bool, int>(false, -1);
             }
             else //cell num is 2, there won't be any spares
             {
@@ -403,13 +404,6 @@ namespace BowlingApi.BusinessLogicHelpers
             }
 
             return false;
-        }
-
-        private bool HandleStrikesAndSpares(PlayerGameSession playerScore, int numPins)
-        {
-
-            return HandleStrike(playerScore, numPins)
-                || HandleSpare(playerScore, numPins);
-        }
+        }        
     }
 }
