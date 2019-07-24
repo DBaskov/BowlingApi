@@ -130,15 +130,15 @@ namespace BowlingApi.Controllers
         }               
 
         [HttpDelete("{Id}")]
-        public async Task<ActionResult> Delete(string playerId)
+        public async Task<ActionResult> Delete(string playerGameSessionId)
         {
-            if (!Guid.TryParse(playerId, out var playerIdGuid))
+            if (!Guid.TryParse(playerGameSessionId, out var playerGameSessionIdGuid))
             {
-                return StatusCode(400, "player game session: " + playerId + " is not in proper format");
+                return StatusCode(400, "player game session: " + playerGameSessionId + " is not in proper format");
             }
             try
             {
-                var deleted = await _playersHelper.DeletePlayerGameData(playerId);
+                var deleted = await _playersHelper.DeletePlayerGameData(playerGameSessionIdGuid);
                 if (deleted)
                 {
                     return Ok();

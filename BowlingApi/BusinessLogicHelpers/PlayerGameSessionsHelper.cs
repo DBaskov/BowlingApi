@@ -41,14 +41,14 @@ namespace BowlingApi.BusinessLogicHelpers
             return playerGameData;
         } 
 
-        public async Task<bool> DeletePlayerGameData(string playerId)
+        public async Task<bool> DeletePlayerGameData(Guid playerId)
         {
-            var result = await _playersDataService.Delete(playerId);
+            var result = await _playersDataService.Delete(playerId.ToString());
 
             return result;
         }
 
-        public async Task<bool> DeleteBulkPlayerGameData(List<string> playerIds)
+        public async Task<bool> DeleteBulkPlayerGameData(List<Guid> playerIds)
         {
             throw new NotImplementedException();
         }

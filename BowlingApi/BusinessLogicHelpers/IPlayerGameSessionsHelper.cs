@@ -21,8 +21,8 @@ namespace BowlingApi.BusinessLogicHelpers
 
         Task<List<PlayerGameSession>> ChangeFrameScore(string playerId, int frameNumber, int newScore);
         
-        Task<bool> DeleteBulkPlayerGameData(List<string> playerIds);
+        Task<bool> DeleteBulkPlayerGameData(List<Guid> playerIds);
 
-        Task<bool> DeletePlayerGameData(string playerIds);
+        Task<bool> DeletePlayerGameData(Guid playerIds);
     }
 }

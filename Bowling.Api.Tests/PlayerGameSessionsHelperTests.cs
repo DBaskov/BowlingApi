@@ -34,7 +34,7 @@ namespace Bowling.Api.Tests
 
             var helper = new PlayerGameSessionsHelper(mockPlayersDataService.Object);
 
-            var playerDataResult = await helper.DeletePlayerGameData("John");
+            var playerDataResult = await helper.DeletePlayerGameData(Guid.NewGuid());
 
             Assert.IsTrue(playerDataResult);
             //Assert.AreEqual("John", playerDataResult.PlayerName); 
