@@ -9,20 +9,20 @@ namespace BowlingApi.BusinessLogicHelpers
 {
     public interface IPlayerGameSessionsHelper
     {
-        Task<List<PlayerGameSession>> InstatiateBulkPlayerGameData(List<string> playerNames);
+        Task<List<PlayerGameSession>> InstatiateBulkPlayerGameSession(List<string> playerNames);
 
-        Task<PlayerGameSession> GetPlayerGameData(Guid playerId);
+        Task<PlayerGameSession> GetPlayerGameSession(Guid playerId);
 
-        Task<PlayerGameSession> InstiateAndInsertPlayerGameData(string playerName);
+        Task<PlayerGameSession> InstiateAndInsertPlayerGameSession(string playerName);
 
-        Task<bool> ReplacePlayerGameData(PlayerGameDataIn playerGameData);
+        Task<bool> ReplacePlayerGameSession(PlayerGameDataIn playerGameData);
 
         Task<PlayerGameSession> UpdateScore(Guid playerId, int numPins);
 
         Task<List<PlayerGameSession>> ChangeFrameScore(string playerId, int frameNumber, int newScore);
         
-        Task<bool> DeleteBulkPlayerGameData(List<Guid> playerIds);
+        Task<bool> DeleteBulkPlayerGameSession(List<Guid> playerIds);
 
-        Task<bool> DeletePlayerGameData(Guid playerIds);
+        Task<bool> DeletePlayerGameSession(Guid playerIds);
     }
 }

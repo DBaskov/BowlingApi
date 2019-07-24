@@ -24,7 +24,7 @@ namespace BowlingApi.BusinessLogicHelpers
             throw new NotImplementedException();
         }
         
-        public async Task<PlayerGameSession> InstiateAndInsertPlayerGameData(string playerName)
+        public async Task<PlayerGameSession> InstiateAndInsertPlayerGameSession(string playerName)
         {
             var playerGameData = new PlayerGameSession
             {
@@ -41,19 +41,19 @@ namespace BowlingApi.BusinessLogicHelpers
             return playerGameData;
         } 
 
-        public async Task<bool> DeletePlayerGameData(Guid playerId)
+        public async Task<bool> DeletePlayerGameSession(Guid playerId)
         {
             var result = await _playersDataService.Delete(playerId.ToString());
 
             return result;
         }
 
-        public async Task<bool> DeleteBulkPlayerGameData(List<Guid> playerIds)
+        public async Task<bool> DeleteBulkPlayerGameSession(List<Guid> playerIds)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<List<PlayerGameSession>> InstatiateBulkPlayerGameData(List<string> playerNames)
+        public async Task<List<PlayerGameSession>> InstatiateBulkPlayerGameSession(List<string> playerNames)
         {
             var playersList = new List<PlayerGameSession>();
 
@@ -77,13 +77,13 @@ namespace BowlingApi.BusinessLogicHelpers
             return playersList;
         }
 
-        public async Task<PlayerGameSession> GetPlayerGameData(Guid playerId)
+        public async Task<PlayerGameSession> GetPlayerGameSession(Guid playerId)
         {
             var result = await _playersDataService.Get(playerId.ToString());
             return result;
         }
 
-        public async Task<bool> ReplacePlayerGameData(PlayerGameDataIn playerGameDataIn)
+        public async Task<bool> ReplacePlayerGameSession(PlayerGameDataIn playerGameDataIn)
         {
             var playerGameData = new PlayerGameSession
             {
@@ -107,7 +107,7 @@ namespace BowlingApi.BusinessLogicHelpers
         public async Task<PlayerGameSession> UpdateScore(Guid playerId, int numPins)
         {
                            
-            var score = await GetPlayerGameData(playerId);
+            var score = await GetPlayerGameSession(playerId);
 
             ComputeNewScore(score, numPins);
 

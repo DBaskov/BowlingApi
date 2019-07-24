@@ -28,7 +28,7 @@ namespace BowlingApi.Controllers
         {           
             try
             {
-                var result = await _playersHelper.InstiateAndInsertPlayerGameData(playerName);
+                var result = await _playersHelper.InstiateAndInsertPlayerGameSession(playerName);
                 return StatusCode(201, new PlayerGameSessionOut
                 {
                     PlayerGameSessionId = result.PlayerGameSessionId,
@@ -50,7 +50,7 @@ namespace BowlingApi.Controllers
         {
             try
             {
-                var result = await _playersHelper.ReplacePlayerGameData(playerGameData);
+                var result = await _playersHelper.ReplacePlayerGameSession(playerGameData);
                 if (result)
                 {
                     return Ok();
@@ -108,7 +108,7 @@ namespace BowlingApi.Controllers
 
             try
             {
-                var result = await _playersHelper.GetPlayerGameData(playerIdGuid);
+                var result = await _playersHelper.GetPlayerGameSession(playerIdGuid);
                 return Ok(new PlayerGameSessionOut
                 {
                     PlayerGameSessionId = result.PlayerGameSessionId,
@@ -138,7 +138,7 @@ namespace BowlingApi.Controllers
             }
             try
             {
-                var deleted = await _playersHelper.DeletePlayerGameData(playerGameSessionIdGuid);
+                var deleted = await _playersHelper.DeletePlayerGameSession(playerGameSessionIdGuid);
                 if (deleted)
                 {
                     return Ok();
