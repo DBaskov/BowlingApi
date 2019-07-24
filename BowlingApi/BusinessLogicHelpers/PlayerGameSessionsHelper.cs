@@ -11,9 +11,8 @@ namespace BowlingApi.BusinessLogicHelpers
 {
     public class PlayerGameSessionsHelper : IPlayerGameSessionsHelper
     {
-        enum SpecialScores { Spare = 10, Strike = 11}; 
-
         public readonly IPlayerGameSessionsRepository _playersDataService;
+
         public PlayerGameSessionsHelper(IPlayerGameSessionsRepository playersDataService)
         {
             _playersDataService = playersDataService;
