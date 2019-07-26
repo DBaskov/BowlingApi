@@ -24,11 +24,11 @@ namespace BowlingApi.Controllers
         }                
 
         [HttpPost("")]
-        public async Task<ActionResult<PlayerGameSessionOut>> Post([FromBody] string playerName)
+        public async Task<ActionResult<PlayerGameSessionOut>> Post([FromBody] PlayerGameSessionIn playerGameSession)
         {           
             try
             {
-                var result = await _playersHelper.InstiateAndInsertPlayerGameSession(playerName);
+                var result = await _playersHelper.InsertPlayerGameSession(playerGameSession);
                 return StatusCode(201, new PlayerGameSessionOut
                 {
                     PlayerGameSessionId = result.PlayerGameSessionId,
@@ -46,11 +46,16 @@ namespace BowlingApi.Controllers
         }
 
         [HttpPut("{Id}")] //for editing score
-        public async Task<ActionResult> Put(string Id, [FromBody]PlayerGameDataIn playerGameData)
+        public async Task<ActionResult> Put(string Id, [FromBody]PlayerGameSessionIn playerGameData)
         {
+            if (!Guid.TryParse(Id, out var gameSessionIdGuid))
+            {
+                return StatusCode(400, "player game session: " + Id + " is not a Guid");
+            }
+
             try
             {
-                var result = await _playersHelper.ReplacePlayerGameSession(playerGameData);
+                var result = await _playersHelper.ReplacePlayerGameSession(playerGameData, gameSessionIdGuid);
                 if (result)
                 {
                     return Ok();
@@ -70,14 +75,14 @@ namespace BowlingApi.Controllers
         [HttpPost("{Id}/calculate-new-score")] //every time bowling pins are knocked down
         public async Task<ActionResult<PlayerGameSessionOut>> CalculateNewScore(string Id, [FromBody]int numPins) //return new total
         {           
-            if(!Guid.TryParse(Id, out var playerIdGuid))
+            if(!Guid.TryParse(Id, out var gameSessionIdGuid))
             {
-                return StatusCode(400, "player game session Id: " + Id + " is not in proper format");
+                return StatusCode(400, "player game session Id: " + Id + " is not a Guid");
             }
 
             try
             {
-                var result = await _playersHelper.UpdateScore(playerIdGuid, numPins);
+                var result = await _playersHelper.UpdateScore(gameSessionIdGuid, numPins);
                 return Ok(new PlayerGameSessionOut
                 {
                     PlayerGameSessionId = result.PlayerGameSessionId,
@@ -101,14 +106,14 @@ namespace BowlingApi.Controllers
         [HttpGet("{Id}")]
         public async Task<ActionResult<PlayerGameSessionOut>> Get(string Id) //return new total
         {
-            if (!Guid.TryParse(Id, out var playerIdGuid))
+            if (!Guid.TryParse(Id, out var gameSessionIdGuid))
             {
-                return StatusCode(400, "player game session: " + Id + " is not in proper format");
+                return StatusCode(400, "player game session: " + Id + " is not a Guid");
             }
 
             try
             {
-                var result = await _playersHelper.GetPlayerGameSession(playerIdGuid);
+                var result = await _playersHelper.GetPlayerGameSession(gameSessionIdGuid);
                 return Ok(new PlayerGameSessionOut
                 {
                     PlayerGameSessionId = result.PlayerGameSessionId,
@@ -134,7 +139,7 @@ namespace BowlingApi.Controllers
         {
             if (!Guid.TryParse(playerGameSessionId, out var playerGameSessionIdGuid))
             {
-                return StatusCode(400, "player game session: " + playerGameSessionId + " is not in proper format");
+                return StatusCode(400, "player game session: " + playerGameSessionId + " is not a Guid");
             }
             try
             {

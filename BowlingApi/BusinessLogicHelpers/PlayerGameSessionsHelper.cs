@@ -18,75 +18,49 @@ namespace BowlingApi.BusinessLogicHelpers
             _playersDataService = playersDataService;
         }
 
-        public async Task<List<PlayerGameSession>> ChangeFrameScore(string playerId, int frameNumber, int newScore)
+        public async Task<List<PlayerGameSession>> ChangeFrameScore(Guid gameSessionId, int frameNumber, int newScore)
         {
             throw new NotImplementedException();
         }
         
-        public async Task<PlayerGameSession> InstiateAndInsertPlayerGameSession(string playerName)
+        public async Task<PlayerGameSession> InsertPlayerGameSession(PlayerGameSessionIn playerGameSessionIn)
         {
-            var playerGameData = new PlayerGameSession
+            var playerGameSession = new PlayerGameSession
             {
                 PlayerGameSessionId = Guid.NewGuid().ToString(),
-                PlayerName = playerName
+                PlayerName = playerGameSessionIn.PlayerName,
+                TotalScore = playerGameSessionIn.TotalScore,
+                RunningTotalList = playerGameSessionIn.RunningTotalList,
+                ResultList = playerGameSessionIn.ResultList
             };
 
-            var success = await _playersDataService.Add(playerGameData);
+            var success = await _playersDataService.Add(playerGameSession);
             if (!success)
             {
                 throw new MongoOperationFailException("Mongo 'AddPlayers' operation failed. ");
             }
 
-            return playerGameData;
+            return playerGameSession;
         } 
 
-        public async Task<bool> DeletePlayerGameSession(Guid playerId)
+        public async Task<bool> DeletePlayerGameSession(Guid gameSessionId)
         {
-            var result = await _playersDataService.Delete(playerId.ToString());
+            var result = await _playersDataService.Delete(gameSessionId.ToString());
 
+            return result;
+        }        
+
+        public async Task<PlayerGameSession> GetPlayerGameSession(Guid gameSessionId)
+        {
+            var result = await _playersDataService.Get(gameSessionId.ToString());
             return result;
         }
 
-        public async Task<bool> DeleteBulkPlayerGameSession(List<Guid> playerIds)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<PlayerGameSession>> InstatiateBulkPlayerGameSession(List<string> playerNames)
-        {
-            var playersList = new List<PlayerGameSession>();
-
-            var matchId = Guid.NewGuid().ToString();
-            foreach (var playerName in playerNames)
-            {
-                playersList.Add(
-                    new PlayerGameSession
-                    {
-                        PlayerGameSessionId = Guid.NewGuid().ToString(),
-                        PlayerName = playerName
-                    });
-            }
-
-            var success = await _playersDataService.AddPlayers(playersList);
-            if(!success)
-            {
-                throw new MongoOperationFailException("Mongo 'AddPlayers' operation failed. ");
-            }
-
-            return playersList;
-        }
-
-        public async Task<PlayerGameSession> GetPlayerGameSession(Guid playerId)
-        {
-            var result = await _playersDataService.Get(playerId.ToString());
-            return result;
-        }
-
-        public async Task<bool> ReplacePlayerGameSession(PlayerGameDataIn playerGameDataIn)
+        public async Task<bool> ReplacePlayerGameSession(PlayerGameSessionIn playerGameDataIn, Guid gameSessionId)
         {
             var playerGameData = new PlayerGameSession
             {
-                PlayerGameSessionId = playerGameDataIn.PlayerId,
+                PlayerGameSessionId = gameSessionId.ToString(),
                 PlayerName = playerGameDataIn.PlayerName,
                 TotalScore = playerGameDataIn.TotalScore,
                 ResultList = playerGameDataIn.ResultList,
@@ -103,10 +77,10 @@ namespace BowlingApi.BusinessLogicHelpers
             return success;
         }        
 
-        public async Task<PlayerGameSession> UpdateScore(Guid playerId, int numPins)
+        public async Task<PlayerGameSession> UpdateScore(Guid gameSessionId, int numPins)
         {
                            
-            var score = await GetPlayerGameSession(playerId);
+            var score = await GetPlayerGameSession(gameSessionId);
 
             ComputeNewScore(score, numPins);
 
