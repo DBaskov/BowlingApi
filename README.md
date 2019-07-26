@@ -22,7 +22,8 @@ PUT: api/bowling/v1/player-game-sessions/{Id} [PlayerGameSession replacement] (s
 Replaces player game session resource, which can be used when player starts a new game (reset score to 0s)
 
 Player Game Session resource model looks like this:
-public class PlayerGameSessionOut
+
+    public class PlayerGameSessionOut
     {
         public string PlayerGameSessionId { get; set; }
         public string PlayerName { get; set; }
@@ -33,7 +34,8 @@ public class PlayerGameSessionOut
         public List<List<int>> ResultList { get; set; }
     }
     
-    PlayerGameSession object passed from client (for POST or modification) looks like this:
+ PlayerGameSession object passed from client (for POST or modification) looks like this:
+ 
     public class PlayerGameSessionIn
     {
         [Required]
