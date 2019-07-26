@@ -5,7 +5,7 @@ Description:
 This is a RESTful API that is meant to display player's score throughout the game on the display screen. The Data Model is organized
 in a way of being able to track player score during game session, and the resource is under /player-game-sessions. The API has 5 calls:
 
-POST: api/bowling/v1/player-game-sessions  [string playerName]
+POST: api/bowling/v1/player-game-sessions  PlayerGameSessionIn (see below the structure)
 Coincides when player enter's name at the console or starts a new game. Creates a player game session resouce with unique ID, that's passed back to the client.
 
 POST: api/bowling/v1/player-game-sessions/{Id}/calculate-new-score [int numberOfPins]
@@ -26,6 +26,18 @@ public class PlayerGameSessionOut
     {
         public string PlayerGameSessionId { get; set; }
         public string PlayerName { get; set; }
+        public int TotalScore { get; set; }
+
+        public List<int> RunningTotalList { get; set; }
+
+        public List<List<int>> ResultList { get; set; }
+    }
+    
+    PlayerGameSession object passed from client (for POST or modification) looks like this:
+    public class PlayerGameSessionIn
+    {
+        [Required]
+        public virtual string PlayerName { get; set; } //player name is required
         public int TotalScore { get; set; }
 
         public List<int> RunningTotalList { get; set; }
